@@ -1,74 +1,26 @@
-# Flask Boilerplate for Profesional Development
+# Plant Care Final Project 4Geeks
 
-[![Open in Gitpod](https://gitpod.io/button/open-in-gitpod.svg)](https://gitpod.io/from-referrer/)
-<p align="center">
-    <a href="https://youtu.be/ORxQ-K3BzQA"><img height="200px" src="https://github.com/4GeeksAcademy/flask-rest-hello/blob/master/docs/assets/how-to.png?raw=true" /></a>
-</p>
+<img src="https://i.ibb.co/hCRyZK3/Logo.png" alt="Logo" border="0">
 
-## Features
+Proyecto final colaborativo de 4Geeks Academy, elaborado junto a Aurelian Voinea (@aurelianvoinea6).
 
-- Extensive documentation [here](https://github.com/4GeeksAcademy/flask-rest-hello/tree/master/docs).
-- Integrated with Pipenv for package managing.
-- Fast deloyment to heroku with `$ pipenv run deploy`.
-- Use of `.env` file.
-- SQLAlchemy integration for database abstraction.
+En este proyecto, se va a realizar una plataforma en donde el usuario podrá tener acceso al seguimiento del estado de su planta gracias a la monitorización de los valores de Temperatura y Humedad obtenidos a través de una Raspberry Pi 4 y el uso de sensores DHT22.
 
-## Installation (automatic if you are using gitpod)
+El usuario podrá ver en su panel de control el estado de cada una de sus plantas. Esto será posible comparando el valor medio actual recogido por parte del sensor con el valor recomendado para cada tipo de planta; si el valor es menor al recomendado, el usuario es avisado.
 
-> Important: The boiplerplate is made for python 3.7 but you can easily change the `python_version` on the Pipfile.
+Para elaborar el proyecto se ha realizado los siguientes esquemas:
 
-The following steps are automatically runned withing gitpod, if you are doing a local installation you have to do them manually:
+<b>Diseño de la Base de datos:</b>
 
-```sh
-pipenv install;
-mysql -u root -e "CREATE DATABASE example";
-pipenv run init;
-pipenv run migrate;
-pipenv run upgrade;
-```
+<a href="https://app.quickdatabasediagrams.com/#/d/cytSRn"><img align="center" src="https://i.ibb.co/hHJjnzK/Final-DATABASE-model.png" alt="Final-DATABASE-model" alt="database" border="0" /></a>
+(Click sobre la imágen para abrir)
 
-## How to Start coding?
+<b>Mockups realizados en Figma:</b>
 
-There is an example API working with an example database. All your application code should be written inside the `./src/` folder.
+<a href="https://www.figma.com/file/K20onXiP5f3uAkAGVAMDeG/Plant_Care_Project2020?node-id=0%3A1"><img align="center" src="https://i.ibb.co/2KjtSHZ/proyecto-mokups.png" alt="proyecto-mockups" border="0" /></a>
+(Click sobre la imágen para abrir)
 
-- src/main.py (it's where your endpoints should be coded)
-- src/models.py (your database tables and serialization logic)
-- src/utils.py (some reusable classes and functions)
-- src/admin.py (add your models to the admin and manage your data easily)
+<b>Paleta de colores utilizada en todo el proyecto:</b>
 
-For a more detailed explanation, look for the tutorial inside the `docs` folder.
-
-## Remember to migrate every time you change your models
-
-You have to migrate and upgrade the migrations for every update you make to your models:
-```
-$ pipenv run migrate (to make the migrations)
-$ pipenv run upgrade  (to update your databse with the migrations)
-```
-
-
-# Manual Installation for Ubuntu & Mac
-
-⚠️ Make sure you have `python 3.6+` and `MySQL` installed on your computer and MySQL is running, then run the following commands:
-```sh
-$ pipenv install (to install pip packages)
-$ pipenv run migrate (to create the database)
-$ pipenv run start (to start the flask webserver)
-```
-
-
-## Deploy to Heroku
-
-This template is 100% compatible with Heroku[https://www.heroku.com/], just make sure to understand and execute the following steps:
-
-```sh
-// Install heroku
-$ npm i heroku -g
-// Login to heroku on the command line
-$ heroku login -i
-// Create an application (if you don't have it already)
-$ heroku create <your_application_name>
-// Commit and push to heroku (commited your changes)
-$ git push heroku master
-```
-:warning: For a more detailed explanation on working with .env variables or the MySQL database [read the full guide](https://github.com/4GeeksAcademy/flask-rest-hello/blob/master/docs/DEPLOY_YOUR_APP.md).
+<a href="https://coolors.co/e3f8e8-ff8785-2c3e50-009ba0-ffffff"><img align="center" src="https://i.ibb.co/gFDDqNf/paleta.png" alt="paleta de colores" border="0" /></a>
+(Click sobre la imágen para abrir)
