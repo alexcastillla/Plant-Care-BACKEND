@@ -12,7 +12,7 @@ Para elaborar el proyecto se ha realizado los siguientes esquemas:
 
 <b>Diseño de la Base de datos:</b>
 
-<a href="https://app.quickdatabasediagrams.com/#/d/cytSRn"><img align="center" src="https://i.ibb.co/hHJjnzK/Final-DATABASE-model.png" alt="Final-DATABASE-model" alt="database" border="0" /></a>
+<a href="https://app.quickdatabasediagrams.com/#/d/cytSRn"><img align="center" src="https://i.ibb.co/Qd5NKXJ/Final-DATABASE-model.png" alt="Final-DATABASE-model" alt="database" border="0" /></a>
 (Click sobre la imágen para abrir)
 
 <b>Mockups realizados en Figma:</b>
@@ -23,4 +23,9 @@ Para elaborar el proyecto se ha realizado los siguientes esquemas:
 <b>Paleta de colores utilizada en todo el proyecto:</b>
 
 <a href="https://coolors.co/e3f8e8-ff8785-2c3e50-009ba0-ffffff"><img align="center" src="https://i.ibb.co/gFDDqNf/paleta.png" alt="paleta de colores" border="0" /></a>
+(Click sobre la imágen para abrir)
+
+<b>Nuestro Trello:</b>
+
+<a href="https://trello.com/invite/b/QTRNKzcl/3968b097321e41e3c94130209e887e5b/plant-care-proyecto"><img align="center" src="https://i.ibb.co/9vxYHDY/Todolist.png" alt="paleta de colores" border="0" /></a>
 (Click sobre la imágen para abrir)
