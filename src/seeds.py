@@ -146,4 +146,4 @@ data = {
         "humidity_sensor": 0.9,
         "temperature_sensor": 18,
         }
-    ],
+    ]
