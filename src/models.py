@@ -42,11 +42,15 @@ class Room(db.Model):
 
 class Plants(db.Model):
     id = db.Column(db.Integer, primary_key=True)
+    id_room = db.Column(db.Integer, db.ForeignKey("room.id"), nullable=False)
     name_plant = db.Column(db.String(45), unique=False, nullable=False)
     tipo_plant = db.Column(db.Enum("Interior", "Exterior"), unique=True, nullable=False)
-    id_room = db.Column(db.Integer, db.ForeignKey("room.id"), nullable=False)
+    grow_phase = db.Column(db.Enum("Germinación", "Crecimiento", "Maduración"), unique=True, nullable=False)
+    sensor_number = db.Column(db.Integer, unique=True, nullable=False)
     users_Plants_Tipo_relationship = db.relationship('Plants_Tipo', lazy=True)
+    users_Plants_Grow_Phase_relationship = db.relationship('Plants_Grow_Phase', lazy=True)
     users_Plants_Time_relationship = db.relationship('Plants_Time', lazy=True)
+    users_sensor_relationship = db.relationship('Plants_Sensors', lazy=True)
 
     def __repr__(self):
         return '<Plants %r>' % self.id_room
@@ -62,8 +66,8 @@ class Plants(db.Model):
 class Plants_Tipo(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name_tipo = db.Column(db.String(45), db.ForeignKey("plants.tipo_plant"), nullable=False)
-    humidity_ideal = db.Column(db.Integer, unique=False, nullable=False)
-    temperature_ideal = db.Column(db.Integer, unique=False, nullable=False)
+    temperature_max_ideal = db.Column(db.Integer, unique=False, nullable=False)
+    temperature_min_ideal = db.Column(db.Integer, unique=False, nullable=False)
 
     def __repr__(self):
         return '<Plants_Tipo %r>' % self.name_tipo
@@ -72,28 +76,44 @@ class Plants_Tipo(db.Model):
         return {
             "id": self.id,
             "name_tipo": self.name_tipo,
-            "humidity_ideal": self.humidity_ideal,
-            "temperature_ideal": self.temperature_ideal
+            "temperature_max_ideal": self.temperature_max_ideal,
+            "temperature_min_ideal": self.temperature_min_ideal
         }
 
-class Plants_Time(db.Model):
+class Plants_Grow_Phase(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    time_stamp = db.Column(db.Integer, unique=False, nullable=False)
-    humidity_sensor = db.Column(db.Integer, unique=False, nullable=False)
-    temperature_sensor = db.Column(db.Integer, unique=False, nullable=False)
-    sensor_name = db.Column(db.String(45), unique=False, nullable=False)
-    id_plant_name = db.Column(db.Integer, db.ForeignKey("plants.id"),nullable=False)
+    name_grow_phase = db.Column(db.String(45), db.ForeignKey("plants.grow_phase"), nullable=False)
+    humidity_max_ideal = db.Column(db.Integer, unique=False, nullable=False)
+    humidity_min_ideal = db.Column(db.Integer, unique=False, nullable=False)
 
     def __repr__(self):
-        return '<Plants_Time %r>' % self.id_plant_name
+        return '<Plants_Grow_Phase %r>' % self.name_grow_phase
 
     def serialize(self):
         return {
             "id": self.id,
-            "time_stamp": self.time_stamp,
+            "name_grow_phase": self.name_grow_phase,
+            "humdity_max_ideal": self.temperature_max_ideal,
+            "humidity_min_ideal": self.temperature_min_ideal
+        }
+
+class Plants_Sensors(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    sensor_number = db.Column(db.Integer, db.ForeignKey("plants.sensor_number"),nullable=False)
+    humidity_sensor = db.Column(db.Integer, unique=False, nullable=False)
+    temperature_sensor = db.Column(db.Integer, unique=False, nullable=False)
+    time_stamp = db.Column(db.Integer, unique=False, nullable=False)
+
+    def __repr__(self):
+        return '<Plants_Sensors %r>' % self.sensor_number
+
+    def serialize(self):
+        return {
+            "id": self.id,
+            "sensor_number": self.sensor_number,
             "humidity_sensor": self.humidity_sensor,
             "temperature_sensor": self.temperature_sensor,
-            "sensor_name": self.sensor_name
+            "time_stamp": self.time_stamp
         }
 
 class Friends(db.Model):
