@@ -3,6 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 db = SQLAlchemy()
 
 class Users(db.Model):
+    __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(45), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -25,6 +26,7 @@ class Users(db.Model):
         }
     
 class Room(db.Model):
+    __tablename__ = 'Room'
     id = db.Column(db.Integer, primary_key=True)
     name_room = db.Column(db.String(20), unique=False, nullable=False)
     id_user = db.Column(db.String(45), db.ForeignKey("users.username"),nullable=False)
@@ -41,11 +43,12 @@ class Room(db.Model):
         }
 
 class Plants(db.Model):
+    __tablename__ = 'Plants'
     id = db.Column(db.Integer, primary_key=True)
     id_room = db.Column(db.Integer, db.ForeignKey("room.id"), nullable=False)
     name_plant = db.Column(db.String(45), unique=False, nullable=False)
     tipo_plant = db.Column(db.Enum("Interior", "Exterior"), unique=False, nullable=False)
-    grow_phase = db.Column(db.Enum("Germinación", "Crecimiento", "Maduración"), unique=True, nullable=False)
+    grow_phase = db.Column(db.Enum("Germinación", "Crecimiento", "Maduración"), unique=False, nullable=False)
     sensor_number = db.Column(db.Integer, unique=True, nullable=False)
     users_Plants_Tipo_relationship = db.relationship('Plants_Tipo', lazy=True)
     users_Plants_Grow_Phase_relationship = db.relationship('Plants_Grow_Phase', lazy=True)
@@ -64,8 +67,8 @@ class Plants(db.Model):
         }
 
 class Plants_Tipo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name_tipo = db.Column(db.String(45), db.ForeignKey("plants.tipo_plant"), nullable=False)
+    __tablename__ = 'Plants_Tipo'
+    name_tipo = db.Column(db.String(45), db.ForeignKey("plants.tipo_plant"), nullable=False, primary_key=True)
     temperature_max_ideal = db.Column(db.Integer, unique=False, nullable=False)
     temperature_min_ideal = db.Column(db.Integer, unique=False, nullable=False)
 
@@ -74,15 +77,14 @@ class Plants_Tipo(db.Model):
 
     def serialize(self):
         return {
-            "id": self.id,
             "name_tipo": self.name_tipo,
             "temperature_max_ideal": self.temperature_max_ideal,
             "temperature_min_ideal": self.temperature_min_ideal
         }
 
 class Plants_Grow_Phase(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name_grow_phase = db.Column(db.String(45), db.ForeignKey("plants.grow_phase"), nullable=False)
+    __tablename__ = 'Grow_Phase'
+    name_grow_phase = db.Column(db.String(45), db.ForeignKey("plants.grow_phase"), nullable=False, primary_key=True)
     humidity_max_ideal = db.Column(db.Integer, unique=False, nullable=False)
     humidity_min_ideal = db.Column(db.Integer, unique=False, nullable=False)
 
@@ -91,18 +93,18 @@ class Plants_Grow_Phase(db.Model):
 
     def serialize(self):
         return {
-            "id": self.id,
             "name_grow_phase": self.name_grow_phase,
             "humdity_max_ideal": self.temperature_max_ideal,
             "humidity_min_ideal": self.temperature_min_ideal
         }
 
 class Plants_Sensors(db.Model):
+    __tablename__ = 'Sensor'
     id = db.Column(db.Integer, primary_key=True)
     sensor_number = db.Column(db.Integer, db.ForeignKey("plants.sensor_number"),nullable=False)
     humidity_sensor = db.Column(db.Integer, unique=False, nullable=False)
     temperature_sensor = db.Column(db.Integer, unique=False, nullable=False)
-    time_stamp = db.Column(db.Integer, unique=False, nullable=False)
+    time_stamp = db.Column(db.Datetime, unique=False, nullable=False)
 
     def __repr__(self):
         return '<Plants_Sensors %r>' % self.sensor_number
@@ -117,16 +119,16 @@ class Plants_Sensors(db.Model):
         }
 
 class Friends(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    id_user = db.Column(db.Integer, db.ForeignKey("users.id"), nullable=False)
-    friend_name = db.Column(db.String(45), unique=False, nullable=False)
+    __tablename__ = 'Friends'
+    follower = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+    followed = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
 
     def __repr__(self):
-        return '<Friends %r>' % self.id_user
+        return '<Friends %r>' % self.follower
 
     def serialize(self):
         return {
             "id": self.id,
-            "id_user": self.id_user,
-            "friend_name": self.friend_name
+            "follower": self.follower,
+            "followed": self.followed
         }

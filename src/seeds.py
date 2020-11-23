@@ -78,13 +78,11 @@ data = {
     ],
     "Plants_Tipo": [
         {
-        "id": 1,
         "name_tipo": "Exterior",
         "temperature_max_ideal": 3,
         "temperature_min_ideal": 38,
         },
         {
-        "id": 2,
         "name_tipo": "Interior",
         "temperature_max_ideal": 24,
         "temperature_min_ideal": 10,
@@ -92,19 +90,16 @@ data = {
     ],
     "Plants_Grow_Phase": [
         {
-        "id": 1,
         "name_tipo": "Germinación",
         "humidity_max_ideal": 0.85,
         "humidity_min_ideal": 0.80,
         },
         {
-        "id": 2,
         "name_tipo": "Crecimiento",
         "humidity_max_ideal": 0.70,
         "humidity_min_ideal": 0.60,
         },
         {
-        "id": 3,
         "name_tipo": "Maduración",
         "humidity_max_ideal": 0.50,
         "humidity_min_ideal": 0.20,
@@ -114,35 +109,35 @@ data = {
         {
         "id": 1,
         "sensor_number": 111,
-        "time_stamp": "2020-11-11 12:34:5",
+        "time_stamp": datetime.now(),
         "humidity_sensor": 0.5,
         "temperature_sensor": 15,
         },
         {
         "id": 2,
-        "sensor_number": 112,
-        "time_stamp": "2020-11-11 12:34:5",
+        "sensor_number": "112",
+        "time_stamp": datetime.now(),
         "humidity_sensor": 0.6,
         "temperature_sensor": 13,
         },
         {
         "id": 3,
-        "sensor_number": 113,
-        "time_stamp": "2020-11-11 12:34:5",
+        "sensor_number": "113",
+        "time_stamp": datetime.now(),
         "humidity_sensor": 0.4,
         "temperature_sensor": 23,
         },
         {
         "id": 4,
-        "sensor_number": 114,
-        "time_stamp": "2020-11-11 12:34:5",
+        "sensor_number": "114",
+        "time_stamp": datetime.now(),
         "humidity_sensor": 0.8,
         "temperature_sensor": 22,
         },
         {
         "id": 5,
-        "sensor_number": 115,
-        "time_stamp": "2020-11-11 12:34:5",
+        "sensor_number": "115",
+        "time_stamp": datetime.now(),
         "humidity_sensor": 0.9,
         "temperature_sensor": 18,
         }

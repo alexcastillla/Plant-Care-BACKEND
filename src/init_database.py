@@ -1,3 +1,8 @@
+import os
+import click
+import flask_migrate
+from flask import Flask
+from flask.cli import with_appcontext
 from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database, database_exists
 
@@ -25,8 +30,11 @@ def create_db():
 # aqui se cargan los datos de seed_data y se insertan en la tabla
 def load_seed_data(data):
     for table, rows in data.items():
+        print(rows)
         ModelClass = getattr(models, table)
 
         for row in rows:
             new_row = ModelClass(**row)
             models.db.session.merge(new_row)
+
+    models.db.session.commit()
