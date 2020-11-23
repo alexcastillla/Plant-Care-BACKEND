@@ -9,7 +9,7 @@ class Users(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(255), unique=False, nullable=False)
     location = db.Column(db.String(30), unique=False, nullable=False)
-    photo = db.Column(db.String(255), unique=False, nullable=True)
+    photo = db.Column(db.String(450), unique=False, nullable=True)
     users_room_relationship = db.relationship('Room', lazy=True)
     users_friends_relationship = db.relationship('Friends', lazy=True)
 
