@@ -44,7 +44,7 @@ class Plants(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_room = db.Column(db.Integer, db.ForeignKey("room.id"), nullable=False)
     name_plant = db.Column(db.String(45), unique=False, nullable=False)
-    tipo_plant = db.Column(db.Enum("Interior", "Exterior"), unique=True, nullable=False)
+    tipo_plant = db.Column(db.Enum("Interior", "Exterior"), unique=False, nullable=False)
     grow_phase = db.Column(db.Enum("Germinación", "Crecimiento", "Maduración"), unique=True, nullable=False)
     sensor_number = db.Column(db.Integer, unique=True, nullable=False)
     users_Plants_Tipo_relationship = db.relationship('Plants_Tipo', lazy=True)
