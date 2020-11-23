@@ -9,7 +9,7 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 
-from models import db
+from models import db, Room
 from init_database import init_db
 #from models import Person
 
@@ -27,6 +27,29 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
+
+@app.route('/new-room', methods=['POST', 'GET'])
+def get_new_room():
+
+    if request.method == 'POST':
+        body = request.get_json()
+        if body is None:
+            raise APIException("You need to specify the request body as a json object", status_code=400)
+        if 'room_name' not in body:
+            raise APIException('You need to specify the room name', status_code=400)
+
+        room = Room(name_room=body['name_room'])
+        db.session.add(room1)
+        db.session.commit()
+
+        return "ok", 200
+
+    if request.method == 'GET':
+        all_room = Room.query.all()
+        all_room = list(map(lambda x: x.serialize(), all_room))
+        return jsonify(all_room), 200
+
+    return "Invalid Method", 404
 
 # # Handle/serialize errors like a JSON object
 # @app.errorhandler(APIException)
