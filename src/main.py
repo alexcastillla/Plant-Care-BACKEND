@@ -28,8 +28,8 @@ CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
 
-@app.route('/new-room', methods=['POST', 'GET'])
-def get_new_room():
+@app.route('/new-room', methods=['POST'])
+def post_new_room():
 
     if request.method == 'POST':
         body = request.get_json()
@@ -43,6 +43,9 @@ def get_new_room():
         db.session.commit()
 
         return "ok", 200
+
+@app.route('/username/new-room', methods=['GET'])
+def get_new_room():
 
     if request.method == 'GET':
         all_room = Room.query.all()
