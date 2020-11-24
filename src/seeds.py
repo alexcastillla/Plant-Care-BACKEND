@@ -2,7 +2,7 @@ data = {
     "Users": [
         {
         "id" : 1,
-        "username": "alexcastilla"
+        "username": "alexcastilla",
         "email": "alexcastillla@gmail.com",
         "password": "c1234567",
         "location" : "Valencia",
@@ -10,7 +10,7 @@ data = {
         },
         {
         "id" : 2,
-        "username": "aurealianvoinea"
+        "username": "aurealianvoinea",
         "email": "aurelianvoinea@gmail.com",
         "password": "a1234567",
         "location" : "Madrid",
@@ -109,36 +109,37 @@ data = {
         {
         "id": 1,
         "sensor_number": 111,
-        "time_stamp": datetime.now(),
+        # "time_stamp": datetime.now(),
         "humidity_sensor": 0.5,
         "temperature_sensor": 15,
         },
         {
         "id": 2,
         "sensor_number": "112",
-        "time_stamp": datetime.now(),
+        # "time_stamp": datetime.now(),
         "humidity_sensor": 0.6,
         "temperature_sensor": 13,
         },
         {
         "id": 3,
         "sensor_number": "113",
-        "time_stamp": datetime.now(),
+        # "time_stamp": datetime.now(),
         "humidity_sensor": 0.4,
         "temperature_sensor": 23,
         },
         {
         "id": 4,
         "sensor_number": "114",
-        "time_stamp": datetime.now(),
+        # "time_stamp": datetime.now(),
         "humidity_sensor": 0.8,
         "temperature_sensor": 22,
         },
         {
         "id": 5,
         "sensor_number": "115",
-        "time_stamp": datetime.now(),
+        # "time_stamp": datetime.now(),
         "humidity_sensor": 0.9,
         "temperature_sensor": 18,
-        }
+        },
     ]
+}

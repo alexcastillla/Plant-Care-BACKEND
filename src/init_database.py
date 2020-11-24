@@ -7,7 +7,7 @@ from sqlalchemy import create_engine
 from sqlalchemy_utils import create_database, database_exists
 
 import models
-from seed_data import data
+from seeds import data
 
 
 @click.command()

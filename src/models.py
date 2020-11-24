@@ -1,9 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Boolean, Text, Float, Table, Date
+from datetime import datetime
 
 db = SQLAlchemy()
 
 class Users(db.Model):
-    __tablename__ = 'Users'
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(45), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
@@ -11,7 +12,7 @@ class Users(db.Model):
     location = db.Column(db.String(30), unique=False, nullable=False)
     photo = db.Column(db.String(450), unique=False, nullable=True)
     users_room_relationship = db.relationship('Room', lazy=True)
-    users_friends_relationship = db.relationship('Friends', lazy=True)
+    # users_friends_relationship = db.relationship('Friends', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -26,10 +27,9 @@ class Users(db.Model):
         }
     
 class Room(db.Model):
-    __tablename__ = 'Room'
     id = db.Column(db.Integer, primary_key=True)
     name_room = db.Column(db.String(20), unique=False, nullable=False)
-    id_user = db.Column(db.String(45), db.ForeignKey("users.username"),nullable=False)
+    id_user = db.Column(db.String(45), db.ForeignKey("users.username"))
     room_Plants_relationship = db.relationship('Plants', lazy=True)
 
     def __repr__(self):
@@ -43,16 +43,15 @@ class Room(db.Model):
         }
 
 class Plants(db.Model):
-    __tablename__ = 'Plants'
     id = db.Column(db.Integer, primary_key=True)
-    id_room = db.Column(db.Integer, db.ForeignKey("room.id"), nullable=False)
+    id_room = db.Column(db.Integer, db.ForeignKey("room.id"), nullable=False, primary_key=True)
     name_plant = db.Column(db.String(45), unique=False, nullable=False)
     tipo_plant = db.Column(db.Enum("Interior", "Exterior"), unique=False, nullable=False)
-    grow_phase = db.Column(db.Enum("Germinación", "Crecimiento", "Maduración"), unique=False, nullable=False)
+    grow_phase = db.Column(db.Enum("Germinación", "Crecimiento", "Maduración"), unique=True, nullable=False)
     sensor_number = db.Column(db.Integer, unique=True, nullable=False)
     users_Plants_Tipo_relationship = db.relationship('Plants_Tipo', lazy=True)
     users_Plants_Grow_Phase_relationship = db.relationship('Plants_Grow_Phase', lazy=True)
-    users_Plants_Time_relationship = db.relationship('Plants_Time', lazy=True)
+    users_Plants_Sensors_relationship = db.relationship('Plants_Sensors', lazy=True)
     users_sensor_relationship = db.relationship('Plants_Sensors', lazy=True)
 
     def __repr__(self):
@@ -67,7 +66,6 @@ class Plants(db.Model):
         }
 
 class Plants_Tipo(db.Model):
-    __tablename__ = 'Plants_Tipo'
     name_tipo = db.Column(db.String(45), db.ForeignKey("plants.tipo_plant"), nullable=False, primary_key=True)
     temperature_max_ideal = db.Column(db.Integer, unique=False, nullable=False)
     temperature_min_ideal = db.Column(db.Integer, unique=False, nullable=False)
@@ -83,7 +81,6 @@ class Plants_Tipo(db.Model):
         }
 
 class Plants_Grow_Phase(db.Model):
-    __tablename__ = 'Grow_Phase'
     name_grow_phase = db.Column(db.String(45), db.ForeignKey("plants.grow_phase"), nullable=False, primary_key=True)
     humidity_max_ideal = db.Column(db.Integer, unique=False, nullable=False)
     humidity_min_ideal = db.Column(db.Integer, unique=False, nullable=False)
@@ -99,12 +96,11 @@ class Plants_Grow_Phase(db.Model):
         }
 
 class Plants_Sensors(db.Model):
-    __tablename__ = 'Sensor'
     id = db.Column(db.Integer, primary_key=True)
-    sensor_number = db.Column(db.Integer, db.ForeignKey("plants.sensor_number"),nullable=False)
+    sensor_number = db.Column(db.Integer, db.ForeignKey("plants.sensor_number"),nullable=False, primary_key=True)
     humidity_sensor = db.Column(db.Integer, unique=False, nullable=False)
     temperature_sensor = db.Column(db.Integer, unique=False, nullable=False)
-    time_stamp = db.Column(db.Datetime, unique=False, nullable=False)
+    time_stamp = db.Column(db.Date, unique=False, nullable=False)
 
     def __repr__(self):
         return '<Plants_Sensors %r>' % self.sensor_number
@@ -118,17 +114,16 @@ class Plants_Sensors(db.Model):
             "time_stamp": self.time_stamp
         }
 
-class Friends(db.Model):
-    __tablename__ = 'Friends'
-    follower = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
-    followed = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+# class Friends(db.Model):
+#     follower = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
+#     followed = db.Column(db.Integer, db.ForeignKey("users.id"), primary_key=True)
 
-    def __repr__(self):
-        return '<Friends %r>' % self.follower
+#     def __repr__(self):
+#         return '<Friends %r>' % self.follower
 
-    def serialize(self):
-        return {
-            "id": self.id,
-            "follower": self.follower,
-            "followed": self.followed
-        }
+#     def serialize(self):
+#         return {
+#             "id": self.id,
+#             "follower": self.follower,
+#             "followed": self.followed
+#         }
