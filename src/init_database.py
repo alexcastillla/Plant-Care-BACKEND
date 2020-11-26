@@ -30,7 +30,6 @@ def create_db():
 # aqui se cargan los datos de seed_data y se insertan en la tabla
 def load_seed_data(data):
     for table, rows in data.items():
-        print(rows)
         ModelClass = getattr(models, table)
 
         for row in rows:

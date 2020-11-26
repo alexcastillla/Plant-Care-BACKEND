@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "62a90245a4fede3106ece375e12f815019bda85893183368c981ddd74dfe1e44"
+            "sha256": "5dfe739d87baf5ead81a22385b558198061717df8ab61720d102410d232a30ee"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -55,6 +55,14 @@
             "index": "pypi",
             "version": "==1.5.7"
         },
+        "flask-cli": {
+            "hashes": [
+                "sha256:625b534f1bd4d05cbd2084b6b820e2d8cbfea8bc08dd3ee786f365bc0591f1d8",
+                "sha256:6604ab407c0a2f6cdb51e1f64bdb01b8b135d547a0a99189b9158353ded6eeb9"
+            ],
+            "index": "pypi",
+            "version": "==0.4.0"
+        },
         "flask-cors": {
             "hashes": [
                 "sha256:6bcfc100288c5d1bcb1dbb854babd59beee622ffd321e444b05f24d6d58466b8",
@@ -86,14 +94,6 @@
             ],
             "index": "pypi",
             "version": "==0.2.14"
-        },
-        "flask.cli": {
-            "hashes": [
-                "sha256:625b534f1bd4d05cbd2084b6b820e2d8cbfea8bc08dd3ee786f365bc0591f1d8",
-                "sha256:6604ab407c0a2f6cdb51e1f64bdb01b8b135d547a0a99189b9158353ded6eeb9"
-            ],
-            "index": "pypi",
-            "version": "==0.4.0"
         },
         "gunicorn": {
             "hashes": [
