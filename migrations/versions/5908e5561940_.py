@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 071fb1b308fd
+Revision ID: 5908e5561940
 Revises: 
-Create Date: 2020-11-26 14:48:03.333205
+Create Date: 2020-11-26 15:20:27.925671
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '071fb1b308fd'
+revision = '5908e5561940'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -35,7 +35,7 @@ def upgrade():
     )
     op.create_table('typeplant',
     sa.Column('id', sa.Integer(), nullable=False),
-    sa.Column('name_tipo', sa.String(length=45), nullable=False),
+    sa.Column('name_type', sa.String(length=45), nullable=False),
     sa.Column('temperature_max_ideal', sa.Integer(), nullable=False),
     sa.Column('temperature_min_ideal', sa.Integer(), nullable=False),
     sa.PrimaryKeyConstraint('id')
@@ -62,13 +62,13 @@ def upgrade():
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('id_room', sa.Integer(), nullable=False),
     sa.Column('name_plant', sa.String(length=45), nullable=False),
-    sa.Column('tipo_plant', sa.Integer(), nullable=False),
+    sa.Column('type_plant', sa.Integer(), nullable=False),
     sa.Column('grow_phase', sa.Integer(), nullable=False),
     sa.Column('sensor_number', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['grow_phase'], ['growphaseplant.id'], ),
     sa.ForeignKeyConstraint(['id_room'], ['room.id'], ),
     sa.ForeignKeyConstraint(['sensor_number'], ['sensorplant.id'], ),
-    sa.ForeignKeyConstraint(['tipo_plant'], ['typeplant.id'], ),
+    sa.ForeignKeyConstraint(['type_plant'], ['typeplant.id'], ),
     sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
