@@ -26,6 +26,16 @@ CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
 
+# Handle/serialize errors like a JSON object
+@app.errorhandler(APIException)
+def handle_invalid_usage(error):
+    return jsonify(error.to_dict()), error.status_code
+
+# generate sitemap with all your endpoints
+@app.route('/')
+def sitemap():
+    return generate_sitemap(app)
+
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
     app.run(host='0.0.0.0', port=PORT, debug=False)
