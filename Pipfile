@@ -21,6 +21,8 @@ flask-admin = "*"
 sqlalchemy-utils = "*"
 flask-cli = "*"
 datetime = "*"
+uuid = "*"
+jwt = "*"
 
 [requires]
 python_version = "3.8"

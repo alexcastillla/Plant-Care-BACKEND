@@ -6,10 +6,14 @@ from flask import Flask, request, jsonify, url_for
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
-from utils import APIException, generate_sitemap
+from utils import APIException, generate_sitemap, token_required
 from admin import setup_admin
-from models import db
+from models import db, Users
 from init_database import init_db
+from werkzeug.security import generate_password_hash, check_password_hash
+import uuid
+import jwt
+import datetime
 
 app = Flask(__name__)
 app.app_context().push()
@@ -35,6 +39,19 @@ def handle_invalid_usage(error):
 @app.route('/')
 def sitemap():
     return generate_sitemap(app)
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def signup_user():  
+ data = request.get_json()  
+
+ hashed_password = generate_password_hash(data['password'], method='sha256')
+ 
+ new_user = Users(username=data['username'], email=data['email'], password=hashed_password, location=data['location'], is_active=True) 
+ db.session.add(new_user)  
+ db.session.commit()    
+
+ return jsonify({'message': 'registered successfully'})
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
