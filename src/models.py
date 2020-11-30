@@ -116,3 +116,7 @@ class Plants(db.Model):
             "type_plant": self.type_plant,
             "id_room": self.id_room
         }
+    
+    def create(self):
+        db.session.add(self)
+        db.session.commit() 
