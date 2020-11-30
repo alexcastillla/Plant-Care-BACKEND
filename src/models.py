@@ -116,3 +116,15 @@ class Plants(db.Model):
             "type_plant": self.type_plant,
             "id_room": self.id_room
         }
+    
+    @classmethod
+    def read_by_id(cls, room_id):
+        plants_by_user = Plants.query.filter_by(id_room = room_id)
+        plants_from_user = list(map(lambda x: x.serialize(), plants_by_user))
+        return plants_from_user
+
+    @classmethod
+    def read_by_id_single_plant(cls, plant_id, room_id):
+        plant = Plants.query.filter_by(id = plant_id, id_room = room_id)
+        single_plant = list(map(lambda x: x.serialize(), plant))
+        return single_plant
