@@ -23,7 +23,23 @@ class Users(db.Model):
             "email": self.email,
             "location": self.location,
         }
-    
+
+    @classmethod
+    def read_by_user(cls, user_id):
+        rooms_by_user = Room.query.filter_by(id_user = user_id)
+        rooms_from_user = list(map(lambda x: x.serialize(), rooms_by_user))
+        return rooms_from_user
+
+    @classmethod
+    def read_by_id(cls, room_id):
+        room = Room.query.filter_by(id = room_id).first()
+        return room
+
+    def update_room(self, name_room):
+        self.name_room = name_room
+        db.session.commit()
+        return self.serialize()
+
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name_room = db.Column(db.String(20), unique=False, nullable=False)
