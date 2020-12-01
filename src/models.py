@@ -125,7 +125,6 @@ class Plants(db.Model):
     grow_phase = db.Column(db.Integer, db.ForeignKey("growphaseplant.id"), nullable=False)
     sensor_number = db.Column(db.Integer, db.ForeignKey("sensorplant.id"), nullable=False)
 
-
     def __repr__(self):
         return '<Plants %r>' % self.id_room
 
@@ -139,4 +138,16 @@ class Plants(db.Model):
     
     def create(self):
         db.session.add(self)
-        db.session.commit() 
+        db.session.commit()
+        
+    @classmethod
+    def read_by_id(cls, room_id):
+        plants_by_user = Plants.query.filter_by(id_room = room_id)
+        plants_from_user = list(map(lambda x: x.serialize(), plants_by_user))
+        return plants_from_user
+
+    @classmethod
+    def read_by_id_single_plant(cls, plant_id, room_id):
+        plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
+        single_plant = list(map(lambda x: x.serialize(), plant))
+        return single_plant
