@@ -26,18 +26,18 @@ CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
 
-@app.route('/<int:user_id>/rooms', methods=['GET'])
+@app.route('/user/<int:user_id>/rooms', methods=['GET'])
 def get_rooms(user_id):
     rooms = Room.read_by_user(user_id)
     if rooms is None:
-        return ("You need to specify the request room as a json object, is empty", status_code=400)
+        return "You need to specify the request room as a json object, is empty", 400
     return jsonify(rooms), 200
 
-@app.route('/<int:user_id>/rooms/<int:room_id>', methods=['PATCH'])
+@app.route('/user/<int:user_id>/rooms/<int:room_id>', methods=['PATCH'])
 def update_room(user_id, room_id):
     body = request.get_json()
     if body is None:
-        raise APIException("You need to specify the request body as a json object", status_code=400)
+        return "You need to specify the request body as a json object", 400
 
     room_to_update = Room.read_by_id(room_id)
     room_updated = room_to_update.update_room(body["name_room"])
