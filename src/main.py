@@ -26,19 +26,18 @@ CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
 
-@app.route('/<int:user_id>/rooms/<int:room_id>/plants', methods=['GET'])
+@app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['GET'])
 def get_plants(user_id, room_id):
     plants = Plants.read_by_id(room_id)
     if plants is None:
-        return ("Plants not found in this room", status_code=400)
+        return "Plants not found in this room", 400
     return jsonify(plants), 200
-    
 
-@app.route('/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>', methods=['GET'])
+@app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>', methods=['GET'])
 def get_single_plant(user_id, room_id, plant_id):
     single_plant = Plants.read_by_id_single_plant(plant_id, room_id)
     if single_plant is None:
-        return ("The single plant object is empty", status_code=400)
+        return "The single plant object is empty", 400
     return jsonify(single_plant), 200
 
 # Handle/serialize errors like a JSON object

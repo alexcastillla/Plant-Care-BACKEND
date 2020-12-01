@@ -125,6 +125,6 @@ class Plants(db.Model):
 
     @classmethod
     def read_by_id_single_plant(cls, plant_id, room_id):
-        plant = Plants.query.filter_by(id = plant_id, id_room = room_id)
+        plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
         single_plant = list(map(lambda x: x.serialize(), plant))
         return single_plant
