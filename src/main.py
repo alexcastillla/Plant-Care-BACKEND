@@ -8,7 +8,7 @@ from flask_swagger import swagger
 from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
-from models import db
+from models import db, Room, Users, Plants_Type, Plants_Grow_Phase, Plants_Sensors, Plants
 from init_database import init_db
 
 app = Flask(__name__)
@@ -28,19 +28,18 @@ app.cli.add_command(init_db)
 
 @app.route('/<int:user_id>/rooms/<int:room_id>/plants', methods=['GET'])
 def get_plants(user_id, room_id):
-    try:
-        plants = Plants.read_by_id(room_id)
-        return jsonify(plants), 200
-    except:
-        return "Plants not found in this room", 400
+    plants = Plants.read_by_id(room_id)
+    if plants is None:
+        return ("Plants not found in this room", status_code=400)
+    return jsonify(plants), 200
+    
 
 @app.route('/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>', methods=['GET'])
 def get_single_plant(user_id, room_id, plant_id):
-    try:
-        single_plant = Plants.read_by_id_single_plant(plant_id, room_id)
-        return jsonify(single_plant), 200
-    except:
-        return "Plant not found", 400
+    single_plant = Plants.read_by_id_single_plant(plant_id, room_id)
+    if single_plant is None:
+        return ("The single plant object is empty", status_code=400)
+    return jsonify(single_plant), 200
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
