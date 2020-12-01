@@ -23,7 +23,23 @@ class Users(db.Model):
             "email": self.email,
             "location": self.location,
         }
-    
+
+    @classmethod
+    def read_by_user(cls, user_id):
+        rooms_by_user = Room.query.filter_by(id_user = user_id)
+        rooms_from_user = list(map(lambda x: x.serialize(), rooms_by_user))
+        return rooms_from_user
+
+    @classmethod
+    def read_by_id(cls, room_id):
+        room = Room.query.filter_by(id = room_id).first()
+        return room
+
+    def update_room(self, name_room):
+        self.name_room = name_room
+        db.session.commit()
+        return self.serialize()
+
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name_room = db.Column(db.String(20), unique=False, nullable=False)
@@ -39,6 +55,10 @@ class Room(db.Model):
             "name_room": self.name_room,
             "id_user": self.id_user
         }
+    
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
 
 class Plants_Type(db.Model):
     __tablename__ = "typeplant"
@@ -105,7 +125,6 @@ class Plants(db.Model):
     grow_phase = db.Column(db.Integer, db.ForeignKey("growphaseplant.id"), nullable=False)
     sensor_number = db.Column(db.Integer, db.ForeignKey("sensorplant.id"), nullable=False)
 
-
     def __repr__(self):
         return '<Plants %r>' % self.id_room
 
@@ -117,6 +136,10 @@ class Plants(db.Model):
             "id_room": self.id_room
         }
     
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+        
     @classmethod
     def read_by_id(cls, room_id):
         plants_by_user = Plants.query.filter_by(id_room = room_id)

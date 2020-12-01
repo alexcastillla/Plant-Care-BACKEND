@@ -26,6 +26,56 @@ CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
 
+@app.route('/user/<int:user_id>/rooms', methods=['POST'])
+def add_new_room(user_id):  
+    body = request.get_json()
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)
+    if 'name_room' not in body:
+        raise APIException('You need to specify the name room', status_code=400)
+
+    new_room = Room(name_room=body['name_room'], id_user=body["id_user"])
+    new_room.create()
+
+    return jsonify({'status': 'OK', 'message': 'Room Added succesfully'}), 201
+
+@app.route('/user/<int:user_id>/rooms', methods=['GET'])
+def get_rooms(user_id):
+    rooms = Room.read_by_user(user_id)
+    if rooms is None:
+        return "You need to specify the request room as a json object, is empty", 400
+    return jsonify(rooms), 200
+
+@app.route('/user/<int:user_id>/rooms/<int:room_id>', methods=['PATCH'])
+def update_room(user_id, room_id):
+    body = request.get_json()
+    if body is None:
+        return "You need to specify the request body as a json object", 400
+
+    room_to_update = Room.read_by_id(room_id)
+    room_updated = room_to_update.update_room(body["name_room"])
+
+    return jsonify(room_updated), 200
+
+@app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['POST'])
+def add_new_plant(user_id, room_id):  
+    body = request.get_json()
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)
+    if 'id_room' not in body:
+        raise APIException('You need to specify the id room', status_code=400)
+    if 'name_plant' not in body:
+        raise APIException('You need to specify the name of the plant', status_code=400)
+    if 'type_plant' not in body:
+        raise APIException('You need to specify the type of plant', status_code=400)
+    if 'grow_phase' not in body:
+        raise APIException('You need to specify the grow phase', status_code=400)
+
+    new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"]) 
+    new_plant.create()
+
+    return jsonify({'status': 'OK', 'message': 'Plant Added succesfully'}), 201
+
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['GET'])
 def get_plants(user_id, room_id):
     plants = Plants.read_by_id(room_id)
