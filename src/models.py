@@ -1,6 +1,7 @@
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy import Column, ForeignKey, Integer, String, Enum, Boolean, Text, Float, Table, Date
 from datetime import datetime
+from sqlalchemy.orm import backref
 
 db = SQLAlchemy()
 
@@ -39,12 +40,17 @@ class Users(db.Model):
         self.name_room = name_room
         db.session.commit()
         return self.serialize()
+    
+    def delete_room(self):
+        db.session.delete(self)
+        db.session.commit()
 
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name_room = db.Column(db.String(20), unique=False, nullable=False)
     id_user = db.Column(db.Integer, db.ForeignKey("users.id"))
     room_Plants_relationship = db.relationship('Plants', lazy=True)
+    room_Plants_relationship = db.relationship('Plants', back_populates="relationship_to_room", cascade="all, delete-orphan", passive_deletes=True)
 
     def __repr__(self):
         return '<Room %r>' % self.name_room
@@ -119,11 +125,12 @@ class Plants_Sensors(db.Model):
 
 class Plants(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    id_room = db.Column(db.Integer, db.ForeignKey("room.id"), nullable=False)
+    id_room = db.Column(db.Integer, db.ForeignKey("room.id", ondelete="CASCADE"), nullable=False)
     name_plant = db.Column(db.String(45), nullable=False)
     type_plant = db.Column(db.Integer, db.ForeignKey("typeplant.id"), nullable=False)
     grow_phase = db.Column(db.Integer, db.ForeignKey("growphaseplant.id"), nullable=False)
     sensor_number = db.Column(db.Integer, db.ForeignKey("sensorplant.id"), nullable=False)
+    relationship_to_room = db.relationship("Room", back_populates="room_Plants_relationship")
 
     def __repr__(self):
         return '<Plants %r>' % self.id_room

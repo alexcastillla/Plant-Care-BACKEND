@@ -57,6 +57,13 @@ def update_room(user_id, room_id):
 
     return jsonify(room_updated), 200
 
+@app.route('/user/<int:user_id>/rooms/<int:room_id>', methods=['DELETE'])
+def delete_room_user(user_id, room_id):
+    room_to_delete = Room.read_by_id(room_id)
+    room_deleted = room_to_delete.delete_room()
+
+    return jsonify(room_to_delete.serialize()), 200
+
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['POST'])
 def add_new_plant(user_id, room_id):  
     body = request.get_json()
