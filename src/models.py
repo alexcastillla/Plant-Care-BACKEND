@@ -39,6 +39,10 @@ class Room(db.Model):
             "name_room": self.name_room,
             "id_user": self.id_user
         }
+    
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
 
 class Plants_Type(db.Model):
     __tablename__ = "typeplant"

@@ -26,6 +26,20 @@ CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
 
+
+@app.route('/<int:user_id>/rooms', methods=['POST'])
+def add_new_room(user_id):  
+    body = request.get_json()
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)
+    if 'name_room' not in body:
+        raise APIException('You need to specify the name room', status_code=400)
+
+    new_room = Room(name_room=body['name_room'], id_user=body["id_user"])
+    new_room.create()
+
+    return jsonify({'status': 'OK', 'message': 'Room Added succesfully'}), 201
+
 @app.route('/<int:user_id>/rooms/<int:room_id>/plants', methods=['POST'])
 def add_new_plant(user_id, room_id):  
     body = request.get_json()
