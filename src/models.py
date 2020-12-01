@@ -116,3 +116,13 @@ class Plants(db.Model):
             "type_plant": self.type_plant,
             "id_room": self.id_room
         }
+
+     def update_plant(self, plant_id, room_id):
+        self.id_plant = plant_id
+        self.id_room = room_id 
+        self.plant_name = name_plant
+        self.plant_type = type_plant
+        self.phase_grow = grow_phase
+        self.number_sensor = sensor_number
+        db.session.commit()
+        return self.serialize()
