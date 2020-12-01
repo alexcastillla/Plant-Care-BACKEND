@@ -48,24 +48,32 @@ def signup_user():
  hashed_password = generate_password_hash(data['password'], method='sha256')
  
  new_user = Users(username=data['username'], email=data['email'], password=hashed_password, location=data['location'], is_active=True) 
- db.session.add(new_user)  
- db.session.commit()    
+ new_user.create_user()
+
+ 
+ 
 
  return jsonify({'message': 'registered successfully'})
 
 @app.route('/login', methods=['POST'])
 def login_user():
-    auth =request.authorization
-
-    if not auth or not auth["username"] or not auth["password"]:
-        return make_response('could not verify', 401, {'WWW.Authentication': 'Basic realm: "login required"'})
-
-    user = Users.query.filter_by(email=auth.username).first()
-
-    if check_password_hash(user.password, auth.password):
-        token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
-        return jsonify({'token' : token.decode('UTF-8')})
-    return make_response('could not verify',  404, {'WWW.Authentication': 'Basic realm: "login required"'})
+    body = request.get_json()
+    
+    if "x-acces-tokens" not in request.headers:
+        if not body or not body["email"] or not body["password"]:
+            return "El email o la contraseña no son correctas", 401
+      
+        user = Users.read_user_by_mail(body["email"])
+        print(user)
+    
+        if check_password_hash(user.password, body["password"]):
+            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+            return jsonify({'token' : token.decode('UTF-8')}, 200)
+        
+        return "Password Invalid", 400
+    
+    else:
+        return "Token válido", 200
 
 @app.route('/users', methods=['GET'])
 def get_all_users():
@@ -79,6 +87,7 @@ def get_all_users():
 
         result.append(user_data)
         return jsonify({'users': result})
+
 
 
 

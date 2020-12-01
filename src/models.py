@@ -24,6 +24,17 @@ class Users(db.Model):
             "location": self.location,
         }
     
+    def create_user(self):
+        db.session.add(self)  
+        db.session.commit() 
+
+    def read_user_by_mail(user_email):
+        user = Users.query.filter_by(email = user_email).first()
+        return user
+
+        
+        
+    
 class Room(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name_room = db.Column(db.String(20), unique=False, nullable=False)
