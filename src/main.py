@@ -2,7 +2,7 @@
 This module takes care of starting the API Server, Loading the DB and Adding the endpoints
 """
 import os
-from flask import Flask, request, jsonify, url_for
+from flask import Flask, request, jsonify, url_for, make_response
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
@@ -52,6 +52,35 @@ def signup_user():
  db.session.commit()    
 
  return jsonify({'message': 'registered successfully'})
+
+@app.route('/login', methods=['POST'])
+def login_user():
+    auth =request.authorization
+
+    if not auth or not auth["username"] or not auth["password"]:
+        return make_response('could not verify', 401, {'WWW.Authentication': 'Basic realm: "login required"'})
+
+    user = Users.query.filter_by(email=auth.username).first()
+
+    if check_password_hash(user.password, auth.password):
+        token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+        return jsonify({'token' : token.decode('UTF-8')})
+    return make_response('could not verify',  404, {'WWW.Authentication': 'Basic realm: "login required"'})
+
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    users = User.query.all()
+    result = []
+
+    for user in users:
+        user_data = {}
+        user_data['email'] = user.email  
+        user_data['password'] = user.password
+
+        result.append(user_data)
+        return jsonify({'users': result})
+
+
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
