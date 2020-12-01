@@ -28,11 +28,10 @@ app.cli.add_command(init_db)
 
 @app.route('/<int:user_id>/rooms', methods=['GET'])
 def get_rooms(user_id):
-    try:
-        rooms = Room.read_by_user(user_id)
-        return jsonify(rooms), 200
-    except:
-        return "Room not found", 400
+    rooms = Room.read_by_user(user_id)
+    if rooms is None:
+        return ("You need to specify the request room as a json object, is empty", status_code=400)
+    return jsonify(rooms), 200
 
 @app.route('/<int:user_id>/rooms/<int:room_id>', methods=['PATCH'])
 def update_room(user_id, room_id):
