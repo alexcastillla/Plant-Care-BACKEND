@@ -53,7 +53,7 @@ def signup_user():
  
  
 
- return jsonify({'message': 'registered successfully'})
+ return jsonify({'message': 'Registered successfully'})
 
 @app.route('/login', methods=['POST'])
 def login_user():
@@ -61,7 +61,7 @@ def login_user():
     
     if "x-acces-tokens" not in request.headers:
         if not body or not body["email"] or not body["password"]:
-            return "El email o la contraseña no son correctas", 401
+            return "Email or Password Invalid", 401
       
         user = Users.read_user_by_mail(body["email"])
         print(user)
@@ -73,7 +73,7 @@ def login_user():
         return "Password Invalid", 400
     
     else:
-        return "Token válido", 200
+        return "Welcome", 200
 
 @app.route('/users', methods=['GET'])
 def get_all_users():
