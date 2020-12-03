@@ -81,7 +81,7 @@ def add_new_plant(user_id, room_id):
     new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"]) 
     new_plant.create()
 
-    return jsonify({'status': 'OK', 'message': 'Plant Added succesfully'}), 201
+    return jsonify({'status': 'OK', 'message': 'Plant Added succesfully'}), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['GET'])
 def get_plants(user_id, room_id):
