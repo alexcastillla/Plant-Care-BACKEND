@@ -70,8 +70,8 @@ class Plants_Type(db.Model):
     __tablename__ = "typeplant"
     id = db.Column(db.Integer, primary_key=True)
     name_type = db.Column(db.String(45), nullable=False)
-    temperature_max_ideal = db.Column(db.Integer, nullable=False)
-    temperature_min_ideal = db.Column(db.Integer, nullable=False)
+    temperature_max_ideal = db.Column(db.Float, nullable=False)
+    temperature_min_ideal = db.Column(db.Float, nullable=False)
     users_Plants_Type_relationship = db.relationship('Plants', lazy=True)
 
     def __repr__(self):
@@ -83,13 +83,19 @@ class Plants_Type(db.Model):
             "temperature_max_ideal": self.temperature_max_ideal,
             "temperature_min_ideal": self.temperature_min_ideal
         }
+    
+    @classmethod
+    def read_all_type(cls):
+        all_types = Plants_Type.query.all()
+        all_types_serialized = list(map(lambda x: x.serialize(), all_types))
+        return all_types_serialized
 
 class Plants_Grow_Phase(db.Model):
     __tablename__ = "growphaseplant"
     id = db.Column(db.Integer, primary_key=True)
     name_grow_phase = db.Column(db.String(45), nullable=False)
-    humidity_max_ideal = db.Column(db.Integer, unique=False, nullable=False)
-    humidity_min_ideal = db.Column(db.Integer, unique=False, nullable=False)
+    humidity_max_ideal = db.Column(db.Float, unique=False, nullable=False)
+    humidity_min_ideal = db.Column(db.Float, unique=False, nullable=False)
     users_Plants_Grow_Phase_relationship = db.relationship('Plants', lazy=True)
 
     def __repr__(self):
@@ -98,16 +104,22 @@ class Plants_Grow_Phase(db.Model):
     def serialize(self):
         return {
             "name_grow_phase": self.name_grow_phase,
-            "humdity_max_ideal": self.temperature_max_ideal,
-            "humidity_min_ideal": self.temperature_min_ideal
+            "humdity_max_ideal": self.humidity_max_ideal,
+            "humidity_min_ideal": self.humidity_min_ideal
         }
+    
+    @classmethod
+    def read_all_grow(cls):
+        all_grows = Plants_Grow_Phase.query.all()
+        all_grows_serialized = list(map(lambda x: x.serialize(), all_grows))
+        return all_grows_serialized
 
 class Plants_Sensors(db.Model):
     __tablename__ = "sensorplant"
     id = db.Column(db.Integer, primary_key=True)
     sensor_number = db.Column(db.String(255),nullable=False)
-    humidity_sensor = db.Column(db.Integer, unique=False, nullable=False)
-    temperature_sensor = db.Column(db.Integer, unique=False, nullable=False)
+    humidity_sensor = db.Column(db.Float, unique=False, nullable=False)
+    temperature_sensor = db.Column(db.Float, unique=False, nullable=False)
     time_stamp = db.Column(db.Date, unique=False, nullable=False)
     users_sensor_relationship = db.relationship('Plants', lazy=True)
 
