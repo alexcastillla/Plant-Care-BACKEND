@@ -41,6 +41,14 @@ class Users(db.Model):
         db.session.commit()
         return self.serialize()
     
+    def create_user(self):
+        db.session.add(self)  
+        db.session.commit() 
+
+    def read_user_by_mail(user_email):
+        user = Users.query.filter_by(email = user_email).first()
+        return user
+
     def delete_room(self):
         db.session.delete(self)
         db.session.commit()
