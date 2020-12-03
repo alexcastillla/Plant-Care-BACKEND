@@ -53,7 +53,7 @@ data = {
     "Plants_Grow_Phase": [
         {
             "id": 1,
-            "name_grow_phase": "Germinación",
+            "name_grow_phase": "Germinacion",
             "humidity_max_ideal": 0.85,
             "humidity_min_ideal": 0.80,
         },
@@ -65,7 +65,7 @@ data = {
         },
         {
             "id": 3,
-            "name_grow_phase": "Maduración",
+            "name_grow_phase": "Maduracion",
             "humidity_max_ideal": 0.50,
             "humidity_min_ideal": 0.20,
         }    

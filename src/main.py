@@ -97,6 +97,20 @@ def get_single_plant(user_id, room_id, plant_id):
         return "The single plant object is empty", 400
     return jsonify(single_plant), 200
 
+@app.route('/grows', methods=['GET'])
+def get_grows():
+    grows = Plants_Grow_Phase.read_all_grow()
+    if grows is None:
+        return "The grow object is empty", 400
+    return jsonify(grows), 200
+
+@app.route('/types', methods=['GET'])
+def get_types():
+    types = Plants_Type.read_all_type()
+    if types is None:
+        return "The type object is empty", 400
+    return jsonify(types), 200
+
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
 def handle_invalid_usage(error):
