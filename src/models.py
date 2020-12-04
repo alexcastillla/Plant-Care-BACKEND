@@ -156,10 +156,14 @@ class Plants(db.Model):
         return '<Plants %r>' % self.id_room
 
     def serialize(self):
+        type_plant = self.get_type_name()
+
         return {
             "id": self.id,
             "username_plant": self.name_plant,
-            "type_plant": self.type_plant,
+            "type_plant": type_plant.name_type,
+            "temperature_max_ideal": type_plant.temperature_max_ideal,
+            "temperature_min_ideal": type_plant.temperature_min_ideal,
             "id_room": self.id_room
         }
     
@@ -178,3 +182,7 @@ class Plants(db.Model):
         plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
         single_plant = list(map(lambda x: x.serialize(), plant))
         return single_plant
+
+    def get_type_name(self):
+        type_plant = Plants_Type.query.filter_by(id = self.type_plant).first()
+        return type_plant
