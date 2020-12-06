@@ -134,10 +134,9 @@ def signup_user():
  hashed_password = generate_password_hash(data['password'], method='sha256')
  
  new_user = Users(username=data['username'], email=data['email'], password=hashed_password, location=data['location'], is_active=True) 
- new_user.create_user()
-
- 
- 
+ print(new_user)
+ db.session.add(new_user)
+ db.session.commit()
 
  return jsonify({'message': 'Registered successfully'})
 
