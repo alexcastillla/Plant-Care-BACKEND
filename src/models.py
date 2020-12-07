@@ -25,22 +25,6 @@ class Users(db.Model):
             "location": self.location,
         }
 
-    @classmethod
-    def read_by_user(cls, user_id):
-        rooms_by_user = Room.query.filter_by(id_user = user_id)
-        rooms_from_user = list(map(lambda x: x.serialize(), rooms_by_user))
-        return rooms_from_user
-
-    @classmethod
-    def read_by_id(cls, room_id):
-        room = Room.query.filter_by(id = room_id).first()
-        return room
-
-    def update_room(self, name_room):
-        self.name_room = name_room
-        db.session.commit()
-        return self.serialize()
-    
     def create_user(self):
         db.session.add(self)  
         db.session.commit() 
@@ -73,6 +57,22 @@ class Room(db.Model):
     def create(self):
         db.session.add(self)
         db.session.commit()
+    
+    @classmethod
+    def read_by_user(cls, user_id):
+        rooms_by_user = Room.query.filter_by(id_user = user_id)
+        rooms_from_user = list(map(lambda x: x.serialize(), rooms_by_user))
+        return rooms_from_user
+
+    @classmethod
+    def read_by_id(cls, room_id):
+        room = Room.query.filter_by(id = room_id).first()
+        return room
+
+    def update_room(self, name_room):
+        self.name_room = name_room
+        db.session.commit()
+        return self.serialize()
 
 class Plants_Type(db.Model):
     __tablename__ = "typeplant"

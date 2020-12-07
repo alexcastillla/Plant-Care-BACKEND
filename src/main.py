@@ -160,7 +160,7 @@ def login_user():
 
 @app.route('/users', methods=['GET'])
 def get_all_users():
-    users = User.query.all()
+    users = Users.query.all()
     result = []
 
     for user in users:
