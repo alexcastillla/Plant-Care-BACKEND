@@ -136,9 +136,6 @@ def signup_user():
  new_user = Users(username=data['username'], email=data['email'], password=hashed_password, location=data['location'], is_active=True) 
  new_user.create_user()
 
- 
- 
-
  return jsonify({'message': 'Registered successfully'})
 
 @app.route('/login', methods=['POST'])
@@ -163,7 +160,7 @@ def login_user():
 
 @app.route('/users', methods=['GET'])
 def get_all_users():
-    users = User.query.all()
+    users = Users.query.all()
     result = []
 
     for user in users:
@@ -173,9 +170,6 @@ def get_all_users():
 
         result.append(user_data)
         return jsonify({'users': result})
-
-
-
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))

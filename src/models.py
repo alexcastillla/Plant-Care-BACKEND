@@ -25,22 +25,6 @@ class Users(db.Model):
             "location": self.location,
         }
 
-    @classmethod
-    def read_by_user(cls, user_id):
-        rooms_by_user = Room.query.filter_by(id_user = user_id)
-        rooms_from_user = list(map(lambda x: x.serialize(), rooms_by_user))
-        return rooms_from_user
-
-    @classmethod
-    def read_by_id(cls, room_id):
-        room = Room.query.filter_by(id = room_id).first()
-        return room
-
-    def update_room(self, name_room):
-        self.name_room = name_room
-        db.session.commit()
-        return self.serialize()
-    
     def create_user(self):
         db.session.add(self)  
         db.session.commit() 
@@ -73,6 +57,22 @@ class Room(db.Model):
     def create(self):
         db.session.add(self)
         db.session.commit()
+    
+    @classmethod
+    def read_by_user(cls, user_id):
+        rooms_by_user = Room.query.filter_by(id_user = user_id)
+        rooms_from_user = list(map(lambda x: x.serialize(), rooms_by_user))
+        return rooms_from_user
+
+    @classmethod
+    def read_by_id(cls, room_id):
+        room = Room.query.filter_by(id = room_id).first()
+        return room
+
+    def update_room(self, name_room):
+        self.name_room = name_room
+        db.session.commit()
+        return self.serialize()
 
 class Plants_Type(db.Model):
     __tablename__ = "typeplant"
@@ -156,11 +156,22 @@ class Plants(db.Model):
         return '<Plants %r>' % self.id_room
 
     def serialize(self):
+        type_plant = self.get_type_data()
+        grow_plant = self.get_grow_data()
+        sensor_plant = self.get_sensor_data()
+
         return {
             "id": self.id,
+            "id_room": self.id_room,
             "username_plant": self.name_plant,
-            "type_plant": self.type_plant,
-            "id_room": self.id_room
+            "type_plant": type_plant.name_type,
+            "temperature_max_ideal": type_plant.temperature_max_ideal,
+            "temperature_min_ideal": type_plant.temperature_min_ideal,
+            "humidity_max_ideal": grow_plant.humidity_max_ideal,
+            "humidity_min_ideal": grow_plant.humidity_min_ideal,
+            "humidity_sensor": sensor_plant.humidity_sensor,
+            "temperature_sensor": sensor_plant.temperature_sensor,
+            "time_stamp": sensor_plant.time_stamp,
         }
     
     def create(self):
@@ -178,3 +189,15 @@ class Plants(db.Model):
         plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
         single_plant = list(map(lambda x: x.serialize(), plant))
         return single_plant
+
+    def get_type_data(self):
+        type_plant = Plants_Type.query.filter_by(id = self.type_plant).first()
+        return type_plant
+
+    def get_grow_data(self):
+        grow_plant = Plants_Grow_Phase.query.filter_by(id = self.grow_phase).first()
+        return grow_plant
+    
+    def get_sensor_data(self):
+        sensor_plant = Plants_Sensors.query.filter_by(id = self.sensor_number).first()
+        return sensor_plant
