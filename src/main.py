@@ -121,6 +121,13 @@ def update_plant(user_id, room_id, plant_id):
     # sensor_number=body["sensor_number"])
     return jsonify(plant_updated), 200
 
+@app.route('/user/<int:id_user>/<int:plant_id>' , methods=['DELETE'])
+def delete_plant_user(user_id, plant_id):
+    plant_to_delete = Plant.read_by_id(plant_id)
+    plant_deleted = plant_to_delete.delete_plant_user
+    return jsonify(plant_to_delete.serialize()), 200
+
+
 @app.route('/grows', methods=['GET'])
 def get_grows():
     grows = Plants_Grow_Phase.read_all_grow()
