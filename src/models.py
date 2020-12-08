@@ -154,7 +154,7 @@ class Plants(db.Model):
     relationship_to_room = db.relationship("Room", back_populates="room_Plants_relationship")
 
     def __repr__(self):
-        return '<Plants %r>' % self.id_room
+        return '<Plants %r>' % self.name_plant
 
     def serialize(self):
         type_plant = self.get_type_data()
@@ -205,8 +205,8 @@ class Plants(db.Model):
     #     sensor_plant = Plants_Sensors.query.filter_by(id = self.sensor_number).first()
     #     return sensor_plant
 
-    def update_plant(self, plant_id, room_id):
-        self.id_plant = plant_id
+    def update_plant(self,plant):
+        self.id_plant = plant.plant_id
         self.id_room = room_id 
         self.plant_name = name_plant
         self.plant_type = type_plant
@@ -214,7 +214,3 @@ class Plants(db.Model):
         # self.number_sensor = sensor_number
         db.session.commit()
         return self.serialize()
-
-    def delete_plant(self):
-        db.session.delete(self)
-        db.session.commit()

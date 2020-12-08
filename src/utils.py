@@ -1,4 +1,7 @@
-from flask import jsonify, url_for
+from flask import jsonify, url_for, request
+from functools import wraps
+import jwt
+
 
 class APIException(Exception):
     status_code = 400
@@ -42,18 +45,4 @@ def generate_sitemap(app):
         <p>Remember to specify an endpoint: </p>
         <ul style="text-align: left;">"""+links_html+"</ul></div>"
 
-def token_required(f):
-   @wraps(f)
-   def decorator(*args, **kwargs):
-    token = None
-    if 'x-access-tokens' in request.headers:
-        token = request.headers['x-access-tokens']
-    if not token:
-        return jsonify({'message': 'a valid token is missing'})
-    try:
-        data = jwt.decode(token, app.config[SECRET_KEY])
-        current_user = Users.query.filter_by(public_id=data['public_id']).first()
-    except:
-        return jsonify({'message': 'token is invalid'})
-    return f(current_user, *args, **kwargs)
-   return decorator
+

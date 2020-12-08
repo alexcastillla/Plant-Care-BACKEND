@@ -6,15 +6,17 @@ from flask import Flask, request, jsonify, url_for, make_response
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
-from utils import APIException, generate_sitemap, token_required
+from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, Room, Users, Plants_Type, Plants_Grow_Phase, Plants_Sensors, Plants
+
 
 from init_database import init_db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import jwt
 import datetime
+from functools import wraps
 
 app = Flask(__name__)
 app.app_context().push()
@@ -23,6 +25,7 @@ data_base = os.environ['DB_CONNECTION_STRING']
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = data_base
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY']='Th1s1ss3cr3t'
 
 MIGRATE = Migrate(app, db)
 db.init_app(app)
@@ -30,6 +33,28 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
+
+
+def token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = None
+        if 'x-access-tokens' in request.headers:
+            token = request.headers['x-access-tokens']
+        if not token:
+            return jsonify({'message': 'a valid token is missing'})
+        print(token,"token")
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+            print(data["id"],"data2")
+            current_user = Users.query.get(data['id'])
+            # print(curent_user,"curent")
+        except:
+            return jsonify({'message': 'token is invalid'})
+        return f(current_user, *args, **kwargs)
+    return decorator
+
+
 
 @app.route('/user/<int:user_id>/rooms', methods=['POST'])
 def add_new_room(user_id):  
@@ -121,11 +146,16 @@ def update_plant(user_id, room_id, plant_id):
     # sensor_number=body["sensor_number"])
     return jsonify(plant_updated), 200
 
-@app.route('/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
-def delete_plant_user(plant_id):
-    plant_to_delete = Plant.read_by_id(plant_id)
-    plant_deleted = plant_to_delete.delete_plant_user
-    return jsonify(plant_to_delete.serialize()), 200
+@app.route('/plants/<int:plant_id>' , methods=['DELETE'])
+@token_required
+def delete_plant_user(curent_user, plant_id):
+    print(curent_user.users_room_relationship,"pepe")
+    plant_to_delete = Plants.query.get(plant_id)
+    if plant_to_delete is None:
+        raise APIException('Plant not found', status_code=404)
+    db.session.delete(plant_to_delete)
+    db.session.commit()
+    return jsonify("Plant Deleted"), 200
 
 
 @app.route('/grows', methods=['GET'])
@@ -168,7 +198,7 @@ def signup_user():
 def login_user():
     body = request.get_json()
     
-    if "x-acces-tokens" not in request.headers:
+    if "x-access-tokens" not in request.headers:
         if not body or not body["email"] or not body["password"]:
             return "Email or Password Invalid", 401
       
@@ -176,7 +206,7 @@ def login_user():
         print(user)
     
         if check_password_hash(user.password, body["password"]):
-            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=300)}, app.config['SECRET_KEY'])
             return jsonify({'token' : token.decode('UTF-8')}, 200)
         
         return "Password Invalid", 400
