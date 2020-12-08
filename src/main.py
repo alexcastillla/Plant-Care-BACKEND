@@ -121,8 +121,8 @@ def update_plant(user_id, room_id, plant_id):
     # sensor_number=body["sensor_number"])
     return jsonify(plant_updated), 200
 
-@app.route('/user/<int:id_user>/<int:plant_id>' , methods=['DELETE'])
-def delete_plant_user(user_id, plant_id):
+@app.route('/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
+def delete_plant_user(plant_id):
     plant_to_delete = Plant.read_by_id(plant_id)
     plant_deleted = plant_to_delete.delete_plant_user
     return jsonify(plant_to_delete.serialize()), 200
