@@ -98,6 +98,16 @@ class Plants_Type(db.Model):
         all_types_serialized = list(map(lambda x: x.serialize(), all_types))
         return all_types_serialized
 
+    def update_plant(self, plant_id, room_id):
+        self.id_plant = plant_id
+        self.id_room = room_id 
+        self.plant_name = name_plant
+        self.plant_type = type_plant
+        self.phase_grow = grow_phase
+        self.number_sensor = sensor_number
+        db.session.commit()
+        return self.serialize()
+
 class Plants_Grow_Phase(db.Model):
     __tablename__ = "growphaseplant"
     id = db.Column(db.Integer, primary_key=True)
