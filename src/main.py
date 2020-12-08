@@ -83,10 +83,12 @@ def add_new_plant(user_id, room_id):
     if 'grow_phase' not in body:
         raise APIException('You need to specify the grow phase', status_code=400)
 
-    new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"]) 
+    new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"])
+    # sensor_number=body["sensor_number"]) 
+
     new_plant.create()
 
-    return jsonify({'status': 'OK', 'message': 'Plant Added succesfully'}), 200
+    return ({'status': 'OK', 'message': 'Plant Added succesfully'}), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['GET'])
 def get_plants(user_id, room_id):
@@ -114,7 +116,9 @@ def update_plant(user_id, room_id, plant_id):
     if 'grow_phase' not in body:
         raise APIException('You need to specify the grow phase', status_code=400)
     plant_to_update = Plants.read_by_id_single_plant(plant_id, room_id)
-    plant_updated =  plant_to_update.update_plant(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"])
+    print (plant_to_update,"plant updated")
+    plant_updated =  plant_to_update.update_plant(name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"])
+    # sensor_number=body["sensor_number"])
     return jsonify(plant_updated), 200
 
 @app.route('/grows', methods=['GET'])
