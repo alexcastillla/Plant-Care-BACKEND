@@ -164,7 +164,8 @@ class Plants(db.Model):
         return {
             "id": self.id,
             "id_room": self.id_room,
-            "username_plant": self.name_plant,
+            "name_plant": self.name_plant,
+            "grow_phase": self.grow_phase,
             "type_plant": type_plant.name_type,
             "temperature_max_ideal": type_plant.temperature_max_ideal,
             "temperature_min_ideal": type_plant.temperature_min_ideal,
@@ -187,15 +188,14 @@ class Plants(db.Model):
 
     @classmethod
     def read_by_id_single_plant(cls, plant_id, room_id):
-        plants_by_user = Plants.query.filter_by(id_room = room_id)
+        plants_by_user = Plants.query.filter_by(id_room = room_id, id = plant_id)
         plants_from_user = list(map(lambda x: x.serialize(), plants_by_user))
         return plants_from_user
         
     @classmethod
     def read_by_single_plant_to_update(cls,room_id, plant_id,user_id):
         plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
-        single_plant = plant
-        return single_plant
+        return plant
 
     def get_type_data(self):
         type_plant = Plants_Type.query.filter_by(id = self.type_plant).first()
@@ -209,8 +209,8 @@ class Plants(db.Model):
         sensor_plant = Plants_Sensors.query.filter_by(id = self.sensor_number).first()
         return sensor_plant
 
-    def update_plant(self, room_id, name_plant, type_plant, grow_phase, sensor_number):
-        self.id_room = room_id
+    def update_plant(self, id_room, name_plant, type_plant, grow_phase, sensor_number):
+        self.id_room = id_room
         self.name_plant = name_plant
         self.plant_type = type_plant
         self.phase_grow = grow_phase
