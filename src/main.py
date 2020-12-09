@@ -146,11 +146,11 @@ def update_plant(user_id, room_id, plant_id):
     # sensor_number=body["sensor_number"])
     return jsonify(plant_updated), 200
 
-@app.route('/plants/<int:plant_id>' , methods=['DELETE'])
-@token_required
-def delete_plant_user(curent_user, plant_id):
-    print(curent_user.users_room_relationship,"pepe")
-    plant_to_delete = Plants.query.get(plant_id)
+@app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
+# @token_required
+def delete_plant_user(user_id, room_id , plant_id):
+    print("pepe")
+    plant_to_delete = Plants.query.filter_by(id=plant_id).first()
     if plant_to_delete is None:
         raise APIException('Plant not found', status_code=404)
     db.session.delete(plant_to_delete)
