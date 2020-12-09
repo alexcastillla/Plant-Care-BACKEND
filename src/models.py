@@ -210,7 +210,7 @@ class Plants(db.Model):
         sensor_plant = Plants_Sensors.query.filter_by(id = self.sensor_number).first()
         return sensor_plant
     
-    def delete_plant(self):
+    def plant_to_delete(self):
         db.session.delete(self)
         db.session.commit()
 
