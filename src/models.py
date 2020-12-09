@@ -209,6 +209,10 @@ class Plants(db.Model):
     def get_sensor_data(self):
         sensor_plant = Plants_Sensors.query.filter_by(id = self.sensor_number).first()
         return sensor_plant
+    
+    def delete_plant(self):
+        db.session.delete(self)
+        db.session.commit()
 
 
 
