@@ -120,7 +120,6 @@ def update_plant(user_id, room_id, plant_id):
     if 'sensor_number' not in body:
         raise APIException('You need to specify the sensor number', status_code=400)
     plant_to_update = Plants.read_by_single_plant_to_update(user_id, plant_id, room_id)
-    print (plant_to_update,"plant updated")
     plant_updated =  plant_to_update.update_plant(room_id=body["room_id"], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"])
     
     return jsonify(plant_updated), 200
@@ -170,7 +169,6 @@ def login_user():
             return "Email or Password Invalid", 401
       
         user = Users.read_user_by_mail(body["email"])
-        print(user)
     
         if check_password_hash(user.password, body["password"]):
             token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])

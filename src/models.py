@@ -193,9 +193,7 @@ class Plants(db.Model):
         
     @classmethod
     def read_by_single_plant_to_update(cls,room_id, plant_id,user_id):
-        print (plant_id, room_id)
         plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
-        print("singleplant",plant)
         single_plant = plant
         return single_plant
 
