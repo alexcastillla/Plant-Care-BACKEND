@@ -45,4 +45,20 @@ def generate_sitemap(app):
         <p>Remember to specify an endpoint: </p>
         <ul style="text-align: left;">"""+links_html+"</ul></div>"
 
+def token_required(f):
+    @wraps(f)
+    def decorator(*args, **kwargs):
+        token = None
+        if 'x-access-tokens' in request.headers:
+            token = request.headers['x-access-tokens']
+        if not token:
+            return jsonify({'message': 'a valid token is missing'})
+        try:
+            data = jwt.decode(token, app.config['SECRET_KEY'])
+            current_user = Users.query.get(data['id'])
+        except:
+            return jsonify({'message': 'token is invalid'})
+        return f(current_user, *args, **kwargs)
+    return decorator
+
 

@@ -35,27 +35,6 @@ setup_admin(app)
 app.cli.add_command(init_db)
 
 
-def token_required(f):
-    @wraps(f)
-    def decorator(*args, **kwargs):
-        token = None
-        if 'x-access-tokens' in request.headers:
-            token = request.headers['x-access-tokens']
-        if not token:
-            return jsonify({'message': 'a valid token is missing'})
-        print(token,"token")
-        try:
-            data = jwt.decode(token, app.config['SECRET_KEY'])
-            print(data["id"],"data2")
-            current_user = Users.query.get(data['id'])
-            # print(curent_user,"curent")
-        except:
-            return jsonify({'message': 'token is invalid'})
-        return f(current_user, *args, **kwargs)
-    return decorator
-
-
-
 @app.route('/user/<int:user_id>/rooms', methods=['POST'])
 def add_new_room(user_id):  
     body = request.get_json()
@@ -108,8 +87,8 @@ def add_new_plant(user_id, room_id):
     if 'grow_phase' not in body:
         raise APIException('You need to specify the grow phase', status_code=400)
 
-    new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"])
-    # sensor_number=body["sensor_number"]) 
+    new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"])
+     
 
     new_plant.create()
 
@@ -129,27 +108,9 @@ def get_single_plant(user_id, room_id, plant_id):
         return "The single plant object is empty", 400
     return jsonify(single_plant), 200
 
-@app.route('/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['PATCH'])
-def update_plant(user_id, room_id, plant_id):
-    body = request.get_json()
-    if body is None:
-        raise APIException("You need to specify the request body as a json object", status_code=400)
-    if 'name_plant' not in body:
-        raise APIException('You need to specify the name of the plant', status_code=400)
-    if 'type_plant' not in body:
-        raise APIException('You need to specify the type of plant', status_code=400)
-    if 'grow_phase' not in body:
-        raise APIException('You need to specify the grow phase', status_code=400)
-    plant_to_update = Plants.read_by_id_single_plant(plant_id, room_id)
-    print (plant_to_update,"plant updated")
-    plant_updated =  plant_to_update.update_plant(name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"])
-    # sensor_number=body["sensor_number"])
-    return jsonify(plant_updated), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
-# @token_required
 def delete_plant_user(user_id, room_id , plant_id):
-    print("pepe")
     plant_to_delete = Plants.query.filter_by(id=plant_id).first()
     if plant_to_delete is None:
         raise APIException('Plant not found', status_code=404)
