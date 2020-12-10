@@ -99,6 +99,7 @@ class Plants_Type(db.Model):
         all_types_serialized = list(map(lambda x: x.serialize(), all_types))
         return all_types_serialized
 
+
 class Plants_Grow_Phase(db.Model):
     __tablename__ = "growphaseplant"
     id = db.Column(db.Integer, primary_key=True)
@@ -155,7 +156,7 @@ class Plants(db.Model):
     relationship_to_room = db.relationship("Room", back_populates="room_Plants_relationship")
 
     def __repr__(self):
-        return '<Plants %r>' % self.id_room
+        return '<Plants %r>' % self.name_plant
 
     def serialize(self):
         type_plant = self.get_type_data()
@@ -187,6 +188,12 @@ class Plants(db.Model):
         return plants_from_user
 
     @classmethod
+    def read_by_id_single_plant(self):
+        print (plant_id, room_id)
+        plant = Plants.query.filter_by(id = self.plant_id, id_room = room_id).first()
+        print("singleplant",plant)
+        single_plant = plant
+
     def read_by_user(cls, user_id):
         all_plants_by_user = Plants.query.filter_by(id_user = user_id)
         all_plants_from_user = list(map(lambda x: x.serialize(), all_plants_by_user))
@@ -197,6 +204,11 @@ class Plants(db.Model):
         plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
         single_plant = list(map(lambda x: x.serialize(), plant))
         return single_plant
+
+    @classmethod
+    def read_by_id(cls, plant_id):
+        plant = cls.query.filter_by(id=plant_id).first()
+        return plant
 
     def get_type_data(self):
         type_plant = Plants_Type.query.filter_by(id = self.type_plant).first()
@@ -209,3 +221,11 @@ class Plants(db.Model):
     def get_sensor_data(self):
         sensor_plant = Plants_Sensors.query.filter_by(id = self.sensor_number).first()
         return sensor_plant
+    
+    def plant_to_delete(self):
+        db.session.delete(self)
+        db.session.commit()
+
+
+
+ 

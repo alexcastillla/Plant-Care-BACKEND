@@ -6,15 +6,17 @@ from flask import Flask, request, jsonify, url_for, make_response
 from flask_migrate import Migrate
 from flask_swagger import swagger
 from flask_cors import CORS
-from utils import APIException, generate_sitemap, token_required
+from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, Room, Users, Plants_Type, Plants_Grow_Phase, Plants_Sensors, Plants
+
 
 from init_database import init_db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import jwt
 import datetime
+from functools import wraps
 
 app = Flask(__name__)
 app.app_context().push()
@@ -23,6 +25,7 @@ data_base = os.environ['DB_CONNECTION_STRING']
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = data_base
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SECRET_KEY']=os.envviron.get(FLASK_APP_KEY)
 
 MIGRATE = Migrate(app, db)
 db.init_app(app)
@@ -30,6 +33,7 @@ db.init_app(app)
 CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
+
 
 @app.route('/user/<int:user_id>/rooms', methods=['POST'])
 def add_new_room(user_id):  
@@ -83,10 +87,12 @@ def add_new_plant(user_id, room_id):
     if 'grow_phase' not in body:
         raise APIException('You need to specify the grow phase', status_code=400)
 
-    new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"]) 
+    new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"])
+     
+
     new_plant.create()
 
-    return jsonify({'status': 'OK', 'message': 'Plant Added succesfully'}), 200
+    return ({'status': 'OK', 'message': 'Plant Added succesfully'}), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['GET'])
 def get_plants(user_id, room_id):
@@ -102,12 +108,22 @@ def get_single_plant(user_id, room_id, plant_id):
         return "The single plant object is empty", 400
     return jsonify(single_plant), 200
 
+@app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
+def delete_plant_user(user_id, room_id , plant_id):
+    plant_to_delete = Plants.query.filter_by(id=plant_id).first()
+    if plant_to_delete is None:
+        raise APIException('Plant not found', status_code=404)
+    db.session.delete(plant_to_delete)
+    db.session.commit()
+    return jsonify("Plant Deleted"), 200
+
 @app.route('/user/<int:user_id>/plants', methods=['GET'])
 def get_all_plants(user_id):
     all_plants = Plants.read_by_user(user_id)
     if all_plants is None:
         return "The all plants object is empty", 400
     return jsonify(all_plants), 200
+
 
 @app.route('/grows', methods=['GET'])
 def get_grows():
@@ -149,7 +165,7 @@ def signup_user():
 def login_user():
     body = request.get_json()
     
-    if "x-acces-tokens" not in request.headers:
+    if "x-access-tokens" not in request.headers:
         if not body or not body["email"] or not body["password"]:
             return "Email or Password Invalid", 401
       
@@ -157,7 +173,7 @@ def login_user():
         print(user)
     
         if check_password_hash(user.password, body["password"]):
-            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=30)}, app.config['SECRET_KEY'])
+            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=300)}, app.config['SECRET_KEY'])
             return jsonify({'token' : token.decode('UTF-8')}, 200)
         
         return "Password Invalid", 400
