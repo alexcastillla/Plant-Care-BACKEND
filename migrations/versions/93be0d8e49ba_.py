@@ -1,8 +1,8 @@
 """empty message
 
-Revision ID: 5908e5561940
+Revision ID: 93be0d8e49ba
 Revises: 
-Create Date: 2020-11-26 15:20:27.925671
+Create Date: 2020-12-10 13:39:56.656377
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '5908e5561940'
+revision = '93be0d8e49ba'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -21,23 +21,23 @@ def upgrade():
     op.create_table('growphaseplant',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name_grow_phase', sa.String(length=45), nullable=False),
-    sa.Column('humidity_max_ideal', sa.Integer(), nullable=False),
-    sa.Column('humidity_min_ideal', sa.Integer(), nullable=False),
+    sa.Column('humidity_max_ideal', sa.Float(), nullable=False),
+    sa.Column('humidity_min_ideal', sa.Float(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('sensorplant',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('sensor_number', sa.String(length=255), nullable=False),
-    sa.Column('humidity_sensor', sa.Integer(), nullable=False),
-    sa.Column('temperature_sensor', sa.Integer(), nullable=False),
+    sa.Column('humidity_sensor', sa.Float(), nullable=False),
+    sa.Column('temperature_sensor', sa.Float(), nullable=False),
     sa.Column('time_stamp', sa.Date(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('typeplant',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('name_type', sa.String(length=45), nullable=False),
-    sa.Column('temperature_max_ideal', sa.Integer(), nullable=False),
-    sa.Column('temperature_min_ideal', sa.Integer(), nullable=False),
+    sa.Column('temperature_max_ideal', sa.Float(), nullable=False),
+    sa.Column('temperature_min_ideal', sa.Float(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',
@@ -61,12 +61,14 @@ def upgrade():
     op.create_table('plants',
     sa.Column('id', sa.Integer(), nullable=False),
     sa.Column('id_room', sa.Integer(), nullable=False),
+    sa.Column('id_user', sa.Integer(), nullable=True),
     sa.Column('name_plant', sa.String(length=45), nullable=False),
     sa.Column('type_plant', sa.Integer(), nullable=False),
     sa.Column('grow_phase', sa.Integer(), nullable=False),
     sa.Column('sensor_number', sa.Integer(), nullable=False),
     sa.ForeignKeyConstraint(['grow_phase'], ['growphaseplant.id'], ),
-    sa.ForeignKeyConstraint(['id_room'], ['room.id'], ),
+    sa.ForeignKeyConstraint(['id_room'], ['room.id'], ondelete='CASCADE'),
+    sa.ForeignKeyConstraint(['id_user'], ['users.id'], ),
     sa.ForeignKeyConstraint(['sensor_number'], ['sensorplant.id'], ),
     sa.ForeignKeyConstraint(['type_plant'], ['typeplant.id'], ),
     sa.PrimaryKeyConstraint('id')

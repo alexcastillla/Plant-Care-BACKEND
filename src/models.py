@@ -13,7 +13,7 @@ class Users(db.Model):
     location = db.Column(db.String(30), unique=False, nullable=False)
     is_active = Column(db.Boolean(False), nullable=False)
     users_room_relationship = db.relationship('Room', lazy=True)
-    users_plants_relationship = db.relationship('Room', lazy=True)
+    users_plants_relationship = db.relationship('Plants', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -187,12 +187,12 @@ class Plants(db.Model):
         plants_from_user = list(map(lambda x: x.serialize(), plants_by_user))
         return plants_from_user
 
-    @classmethod
-    def read_by_id_single_plant(self):
-        print (plant_id, room_id)
-        plant = Plants.query.filter_by(id = self.plant_id, id_room = room_id).first()
-        print("singleplant",plant)
-        single_plant = plant
+    # @classmethod
+    # def read_by_id_single_plant(self):
+    #     print (plant_id, room_id)
+    #     plant = Plants.query.filter_by(id = self.plant_id, id_room = room_id).first()
+    #     print("singleplant",plant)
+    #     single_plant = plant
 
     def read_by_user(cls, user_id):
         all_plants_by_user = Plants.query.filter_by(id_user = user_id)
