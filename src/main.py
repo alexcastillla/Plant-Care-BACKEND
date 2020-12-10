@@ -25,7 +25,7 @@ data_base = os.environ['DB_CONNECTION_STRING']
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = data_base
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY']='Th1s1ss3cr3t'
+app.config['SECRET_KEY']='os.envviron.get(Th1s1ss3cr3t)'
 
 MIGRATE = Migrate(app, db)
 db.init_app(app)
