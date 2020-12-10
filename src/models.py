@@ -187,12 +187,10 @@ class Plants(db.Model):
         plants_from_user = list(map(lambda x: x.serialize(), plants_by_user))
         return plants_from_user
 
-    # @classmethod
-    # def read_by_id_single_plant(self):
-    #     print (plant_id, room_id)
-    #     plant = Plants.query.filter_by(id = self.plant_id, id_room = room_id).first()
-    #     print("singleplant",plant)
-    #     single_plant = plant
+    @classmethod
+    def read_by_single_plant_to_update(cls,room_id, plant_id,user_id):
+        plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
+        return plant
 
     def read_by_user(cls, user_id):
         all_plants_by_user = Plants.query.filter_by(id_user = user_id)

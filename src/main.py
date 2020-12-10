@@ -148,6 +148,26 @@ def get_single_plant(user_id, room_id, plant_id):
         return "The single plant object is empty", 400
     return jsonify(single_plant), 200
 
+@app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['PATCH'])
+def update_plant(user_id, room_id, plant_id):
+    body = request.get_json()
+    if body is None:
+        raise APIException("You need to specify the request body as a json object", status_code=400)
+    if 'id_room' not in body:
+        raise APIException('You need to specify the id room', status_code=400)
+    if 'name_plant' not in body:
+        raise APIException('You need to specify the name of the plant', status_code=400)
+    if 'type_plant' not in body:
+        raise APIException('You need to specify the type of plant', status_code=400)
+    if 'grow_phase' not in body:
+        raise APIException('You need to specify the grow phase', status_code=400)
+    if 'sensor_number' not in body:
+        raise APIException('You need to specify the sensor number', status_code=400)
+    plant_to_update = Plants.read_by_single_plant_to_update(user_id, plant_id, room_id)
+    plant_updated =  plant_to_update.update_plant(id_room=body["id_room"], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"])
+    
+    return jsonify(plant_updated), 200
+    
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
 def delete_plant_user(user_id, room_id , plant_id):
     plant_to_delete = Plants.query.filter_by(id=plant_id).first()
