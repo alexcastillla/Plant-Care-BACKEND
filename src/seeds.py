@@ -110,6 +110,7 @@ data = {
     "Plants": [
         {
             "id": 1,
+            "id_user": 1,
             "id_room": 1,
             "name_plant": "Rosita",
             "type_plant": 2,
@@ -118,6 +119,7 @@ data = {
         },
         {
             "id": 2,
+            "id_user": 1,
             "id_room": 1,
             "name_plant": "Cactus",
             "type_plant": 1,
@@ -126,6 +128,7 @@ data = {
         },
         {
             "id": 3,
+            "id_user": 1,
             "id_room": 2,
             "name_plant": "Pepino",
             "type_plant": 2,
@@ -134,6 +137,7 @@ data = {
         },
         {
             "id": 4,
+            "id_user": 2,
             "id_room": 3,
             "name_plant": "Groot Madre",
             "type_plant": 2,
@@ -142,6 +146,7 @@ data = {
         },
         {
             "id": 5,
+            "id_user": 2,
             "id_room": 3,
             "name_plant": "Groot Padre",
             "type_plant": 2,
