@@ -9,7 +9,6 @@ from flask_cors import CORS
 from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, Room, Users, Plants_Type, Plants_Grow_Phase, Plants_Sensors, Plants
-
 from init_database import init_db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
@@ -33,6 +32,50 @@ CORS(app)
 setup_admin(app)
 app.cli.add_command(init_db)
 
+
+@app.route('/register', methods=['GET', 'POST'])
+def signup_user():  
+    data = request.get_json()  
+
+    hashed_password = generate_password_hash(data['password'], method='sha256')
+
+    new_user = Users(username=data['username'], email=data['email'], password=hashed_password, location=data['location'], is_active=True) 
+    new_user.create_user()
+
+    return jsonify({'message': 'Registered successfully'})
+
+@app.route('/login', methods=['POST'])
+def login_user():
+    body = request.get_json()
+    
+    if "x-access-tokens" not in request.headers:
+        if not body or not body["email"] or not body["password"]:
+            return "Email or Password Invalid", 401
+      
+        user = Users.read_user_by_mail(body["email"])
+        print(user)
+    
+        if check_password_hash(user.password, body["password"]):
+            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=300)}, app.config['SECRET_KEY'])
+            return jsonify({'token' : token.decode('UTF-8')}, 200)
+        
+        return "Password Invalid", 400
+    
+    else:
+        return "Welcome", 200
+
+@app.route('/users', methods=['GET'])
+def get_all_users():
+    users = Users.query.all()
+    result = []
+
+    for user in users:
+        user_data = {}
+        user_data['email'] = user.email  
+        user_data['password'] = user.password
+
+        result.append(user_data)
+        return jsonify({'users': result})
 
 @app.route('/user/<int:user_id>/rooms', methods=['POST'])
 def add_new_room(user_id):  
@@ -87,8 +130,6 @@ def add_new_plant(user_id, room_id):
         raise APIException('You need to specify the grow phase', status_code=400)
 
     new_plant = Plants(id_room=body['id_room'], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"])
-     
-
     new_plant.create()
 
     return ({'status': 'OK', 'message': 'Plant Added succesfully'}), 200
@@ -123,7 +164,6 @@ def get_all_plants(user_id):
         return "The all plants object is empty", 400
     return jsonify(all_plants), 200
 
-
 @app.route('/grows', methods=['GET'])
 def get_grows():
     grows = Plants_Grow_Phase.read_all_grow()
@@ -147,51 +187,6 @@ def handle_invalid_usage(error):
 @app.route('/')
 def sitemap():
     return generate_sitemap(app)
-
-
-@app.route('/register', methods=['GET', 'POST'])
-def signup_user():  
- data = request.get_json()  
-
- hashed_password = generate_password_hash(data['password'], method='sha256')
- 
- new_user = Users(username=data['username'], email=data['email'], password=hashed_password, location=data['location'], is_active=True) 
- new_user.create_user()
-
- return jsonify({'message': 'Registered successfully'})
-
-@app.route('/login', methods=['POST'])
-def login_user():
-    body = request.get_json()
-    
-    if "x-access-tokens" not in request.headers:
-        if not body or not body["email"] or not body["password"]:
-            return "Email or Password Invalid", 401
-      
-        user = Users.read_user_by_mail(body["email"])
-        print(user)
-    
-        if check_password_hash(user.password, body["password"]):
-            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=300)}, app.config['SECRET_KEY'])
-            return jsonify({'token' : token.decode('UTF-8')}, 200)
-        
-        return "Password Invalid", 400
-    
-    else:
-        return "Welcome", 200
-
-@app.route('/users', methods=['GET'])
-def get_all_users():
-    users = Users.query.all()
-    result = []
-
-    for user in users:
-        user_data = {}
-        user_data['email'] = user.email  
-        user_data['password'] = user.password
-
-        result.append(user_data)
-        return jsonify({'users': result})
 
 if __name__ == '__main__':
     PORT = int(os.environ.get('PORT', 3000))
