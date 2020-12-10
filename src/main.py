@@ -10,7 +10,6 @@ from utils import APIException, generate_sitemap
 from admin import setup_admin
 from models import db, Room, Users, Plants_Type, Plants_Grow_Phase, Plants_Sensors, Plants
 
-
 from init_database import init_db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
@@ -25,7 +24,7 @@ data_base = os.environ['DB_CONNECTION_STRING']
 app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = data_base
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['SECRET_KEY']=os.envviron.get(FLASK_APP_KEY)
+app.config['SECRET_KEY']=os.environ.get("FLASK_APP_KEY")
 
 MIGRATE = Migrate(app, db)
 db.init_app(app)
