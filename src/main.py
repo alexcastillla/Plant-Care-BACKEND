@@ -108,7 +108,6 @@ def get_single_plant(user_id, room_id, plant_id):
         return "The single plant object is empty", 400
     return jsonify(single_plant), 200
 
-
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
 def delete_plant_user(user_id, room_id , plant_id):
     plant_to_delete = Plants.query.filter_by(id=plant_id).first()
@@ -117,6 +116,13 @@ def delete_plant_user(user_id, room_id , plant_id):
     db.session.delete(plant_to_delete)
     db.session.commit()
     return jsonify("Plant Deleted"), 200
+
+@app.route('/user/<int:user_id>/plants', methods=['GET'])
+def get_all_plants(user_id):
+    all_plants = Plants.read_by_user(user_id)
+    if all_plants is None:
+        return "The all plants object is empty", 400
+    return jsonify(all_plants), 200
 
 
 @app.route('/grows', methods=['GET'])

@@ -13,6 +13,7 @@ class Users(db.Model):
     location = db.Column(db.String(30), unique=False, nullable=False)
     is_active = Column(db.Boolean(False), nullable=False)
     users_room_relationship = db.relationship('Room', lazy=True)
+    users_plants_relationship = db.relationship('Room', lazy=True)
 
     def __repr__(self):
         return '<User %r>' % self.username
@@ -147,6 +148,7 @@ class Plants_Sensors(db.Model):
 class Plants(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     id_room = db.Column(db.Integer, db.ForeignKey("room.id", ondelete="CASCADE"), nullable=False)
+    id_user = db.Column(db.Integer, db.ForeignKey("users.id"))
     name_plant = db.Column(db.String(45), nullable=False)
     type_plant = db.Column(db.Integer, db.ForeignKey("typeplant.id"), nullable=False)
     grow_phase = db.Column(db.Integer, db.ForeignKey("growphaseplant.id"), nullable=False)
@@ -191,6 +193,16 @@ class Plants(db.Model):
         plant = Plants.query.filter_by(id = self.plant_id, id_room = room_id).first()
         print("singleplant",plant)
         single_plant = plant
+
+    def read_by_user(cls, user_id):
+        all_plants_by_user = Plants.query.filter_by(id_user = user_id)
+        all_plants_from_user = list(map(lambda x: x.serialize(), all_plants_by_user))
+        return all_plants_from_user
+
+    @classmethod
+    def read_by_id_single_plant(cls, plant_id, room_id):
+        plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
+        single_plant = list(map(lambda x: x.serialize(), plant))
         return single_plant
 
     @classmethod
