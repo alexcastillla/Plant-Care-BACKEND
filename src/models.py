@@ -93,6 +93,10 @@ class Plants_Type(db.Model):
             "temperature_min_ideal": self.temperature_min_ideal
         }
     
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+           
     @classmethod
     def read_all_type(cls):
         all_types = Plants_Type.query.all()
@@ -118,6 +122,10 @@ class Plants_Grow_Phase(db.Model):
             "humidity_min_ideal": self.humidity_min_ideal
         }
     
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
+
     @classmethod
     def read_all_grow(cls):
         all_grows = Plants_Grow_Phase.query.all()
@@ -144,6 +152,10 @@ class Plants_Sensors(db.Model):
             "temperature_sensor": self.temperature_sensor,
             "time_stamp": self.time_stamp
         }
+    
+    def create(self):
+        db.session.add(self)
+        db.session.commit()
 
 class Plants(db.Model):
     id = db.Column(db.Integer, primary_key=True)

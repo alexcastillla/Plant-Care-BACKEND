@@ -13,7 +13,7 @@ from init_database import init_db
 from werkzeug.security import generate_password_hash, check_password_hash
 import uuid
 import jwt
-import datetime
+from datetime import datetime
 from functools import wraps
 
 app = Flask(__name__)
@@ -167,7 +167,7 @@ def update_plant(user_id, room_id, plant_id):
     plant_updated =  plant_to_update.update_plant(id_room=body["id_room"], name_plant=body["name_plant"], type_plant=body["type_plant"], grow_phase=body["grow_phase"], sensor_number=body["sensor_number"])
     
     return jsonify(plant_updated), 200
-    
+
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
 def delete_plant_user(user_id, room_id , plant_id):
     plant_to_delete = Plants.query.filter_by(id=plant_id).first()
@@ -197,6 +197,35 @@ def get_types():
     if types is None:
         return "The type object is empty", 400
     return jsonify(types), 200
+
+# Rutas de carga de datos para presentacion
+
+@app.route('/grows', methods=['POST'])
+def add_grow():  
+    body = request.get_json()
+
+    new_grow = Plants_Grow_Phase(name_grow_phase=body['name_grow_phase'], humidity_max_ideal=body["humidity_max_ideal"], humidity_min_ideal=body["humidity_min_ideal"])
+    new_grow.create()
+
+    return ({'status': 'OK', 'message': 'Grow data saved succesfully'}), 200
+
+@app.route('/plantstype', methods=['POST'])
+def add_types():  
+    body = request.get_json()
+
+    new_types = Plants_Type(name_type=body['name_type'], temperature_max_ideal=body["temperature_max_ideal"], temperature_min_ideal=body["temperature_min_ideal"])
+    new_types.create()
+
+    return ({'status': 'OK', 'message': 'Type data saved succesfully'}), 200
+
+@app.route('/sensordata', methods=['POST'])
+def add_sensordata():  
+    body = request.get_json()
+
+    new_sensor = Plants_Sensors(sensor_number=body['sensor_number'], time_stamp= datetime.now(), humidity_sensor=body["humidity_sensor"], temperature_sensor=body["temperature_sensor"])
+    new_sensor.create()
+
+    return ({'status': 'OK', 'message': 'Type data saved succesfully'}), 200
 
 # Handle/serialize errors like a JSON object
 @app.errorhandler(APIException)
