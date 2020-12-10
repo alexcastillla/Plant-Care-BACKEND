@@ -24,7 +24,6 @@ app.url_map.strict_slashes = False
 app.config['SQLALCHEMY_DATABASE_URI'] = data_base
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY']=os.environ.get("FLASK_APP_KEY")
-print(app.config['SECRET_KEY'], "holaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
 
 MIGRATE = Migrate(app, db)
 db.init_app(app)
@@ -79,7 +78,6 @@ def get_all_users():
         return jsonify({'users': result})
 
 @app.route('/user/<int:user_id>/rooms', methods=['POST'])
-@token_required
 def add_new_room(user_id):  
     body = request.get_json()
     if body is None:
@@ -87,13 +85,12 @@ def add_new_room(user_id):
     if 'name_room' not in body:
         raise APIException('You need to specify the name room', status_code=400)
 
-    new_room = Room(name_room=body['name_room'], id_user=body["id_user"])
+    new_room = Room(name_room=body['name_room'], id_user= user_id)
     new_room.create()
 
     return jsonify({'status': 'OK', 'message': 'Room Added succesfully'}), 201
 
 @app.route('/user/<int:user_id>/rooms', methods=['GET'])
-@token_required
 def get_rooms(user_id):
     rooms = Room.read_by_user(user_id)
     if rooms is None:
@@ -101,7 +98,6 @@ def get_rooms(user_id):
     return jsonify(rooms), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>', methods=['PATCH'])
-@token_required
 def update_room(user_id, room_id):
     body = request.get_json()
     if body is None:
@@ -113,7 +109,6 @@ def update_room(user_id, room_id):
     return jsonify(room_updated), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>', methods=['DELETE'])
-@token_required
 def delete_room_user(user_id, room_id):
     room_to_delete = Room.read_by_id(room_id)
     room_deleted = room_to_delete.delete_room()
@@ -121,7 +116,6 @@ def delete_room_user(user_id, room_id):
     return jsonify(room_to_delete.serialize()), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['POST'])
-@token_required
 def add_new_plant(user_id, room_id):  
     body = request.get_json()
     if body is None:
@@ -141,7 +135,6 @@ def add_new_plant(user_id, room_id):
     return ({'status': 'OK', 'message': 'Plant Added succesfully'}), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants', methods=['GET'])
-@token_required
 def get_plants(user_id, room_id):
     plants = Plants.read_by_id(room_id)
     if plants is None:
@@ -149,7 +142,6 @@ def get_plants(user_id, room_id):
     return jsonify(plants), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>', methods=['GET'])
-@token_required
 def get_single_plant(user_id, room_id, plant_id):
     single_plant = Plants.read_by_id_single_plant(plant_id, room_id)
     if single_plant is None:
@@ -157,7 +149,6 @@ def get_single_plant(user_id, room_id, plant_id):
     return jsonify(single_plant), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>/plants/<int:plant_id>' , methods=['DELETE'])
-@token_required
 def delete_plant_user(user_id, room_id , plant_id):
     plant_to_delete = Plants.query.filter_by(id=plant_id).first()
     if plant_to_delete is None:
@@ -167,7 +158,6 @@ def delete_plant_user(user_id, room_id , plant_id):
     return jsonify("Plant Deleted"), 200
 
 @app.route('/user/<int:user_id>/plants', methods=['GET'])
-@token_required
 def get_all_plants(user_id):
     all_plants = Plants.read_by_user(user_id)
     if all_plants is None:
