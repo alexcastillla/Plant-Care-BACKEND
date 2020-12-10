@@ -1,7 +1,9 @@
-from flask import jsonify, url_for, request
+from flask import Flask, jsonify, url_for, request
+from flask.cli import with_appcontext
 from functools import wraps
 import jwt
-
+import os
+from models import Users
 
 class APIException(Exception):
     status_code = 400
@@ -49,13 +51,16 @@ def token_required(f):
     @wraps(f)
     def decorator(*args, **kwargs):
         token = None
+        print(app.config['SECRET_KEY'])
         if 'x-access-tokens' in request.headers:
             token = request.headers['x-access-tokens']
         if not token:
             return jsonify({'message': 'a valid token is missing'})
         try:
+            print(app.config['SECRET_KEY'])
             data = jwt.decode(token, app.config['SECRET_KEY'])
-            current_user = Users.query.get(data['id'])
+            print(data, "oooooooooooooooooooooooooo")
+            current_user = Users.query.get(data['id']).first()
         except:
             return jsonify({'message': 'token is invalid'})
         return f(current_user, *args, **kwargs)

@@ -24,6 +24,7 @@ datetime = "*"
 uuid = "*"
 jwt = "*"
 pyjwt = "*"
+werkzeug = "*"
 
 [requires]
 python_version = "3.8"
