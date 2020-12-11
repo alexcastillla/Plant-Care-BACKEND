@@ -41,7 +41,7 @@ data = {
             "id": 1,
             "name_type": "Exterior",
             "temperature_max_ideal": 3,
-            "temperature_max_ideal": 38,
+            "temperature_mix_ideal": 38,
         },
         {
             "id": 2,

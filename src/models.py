@@ -88,6 +88,7 @@ class Plants_Type(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "name_type": self.name_type,
             "temperature_max_ideal": self.temperature_max_ideal,
             "temperature_min_ideal": self.temperature_min_ideal
@@ -117,6 +118,7 @@ class Plants_Grow_Phase(db.Model):
 
     def serialize(self):
         return {
+            "id": self.id,
             "name_grow_phase": self.name_grow_phase,
             "humdity_max_ideal": self.humidity_max_ideal,
             "humidity_min_ideal": self.humidity_min_ideal
