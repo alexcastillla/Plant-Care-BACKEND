@@ -74,6 +74,10 @@ class Room(db.Model):
         self.name_room = name_room
         db.session.commit()
         return self.serialize()
+    
+    def delete_room(self):
+        db.session.delete(self)
+        db.session.commit()
 
 class Plants_Type(db.Model):
     __tablename__ = "typeplant"
@@ -206,6 +210,7 @@ class Plants(db.Model):
         plant = Plants.query.filter_by(id = plant_id, id_room = room_id).first()
         return plant
 
+    @classmethod
     def read_by_user(cls, user_id):
         all_plants_by_user = Plants.query.filter_by(id_user = user_id)
         all_plants_from_user = list(map(lambda x: x.serialize(), all_plants_by_user))

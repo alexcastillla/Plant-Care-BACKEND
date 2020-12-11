@@ -5,7 +5,7 @@ import os
 from flask import Flask, request, jsonify, url_for, make_response
 from flask_migrate import Migrate
 from flask_swagger import swagger
-from flask_cors import CORS
+from flask_cors import CORS, cross_origin
 from utils import APIException, generate_sitemap, token_required
 from admin import setup_admin
 from models import db, Room, Users, Plants_Type, Plants_Grow_Phase, Plants_Sensors, Plants
@@ -47,7 +47,7 @@ def signup_user():
 @app.route('/login', methods=['POST'])
 def login_user():
     body = request.get_json()
-    
+    print(body)
     if "x-access-tokens" not in request.headers:
         if not body or not body["email"] or not body["password"]:
             return "Email or Password Invalid", 401
@@ -56,7 +56,9 @@ def login_user():
         print(user)
     
         if check_password_hash(user.password, body["password"]):
-            token = jwt.encode({'id': user.id, 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=300)}, app.config['SECRET_KEY'])
+            print("estoy aqui decodificandooooooo")
+            token = jwt.encode({'id': user.id}, app.config['SECRET_KEY'])
+            print(token, "soy el token")
             return jsonify({'token' : token.decode('UTF-8')}, 200)
         
         return "Password Invalid", 400
@@ -109,6 +111,7 @@ def update_room(user_id, room_id):
     return jsonify(room_updated), 200
 
 @app.route('/user/<int:user_id>/rooms/<int:room_id>', methods=['DELETE'])
+@cross_origin()
 def delete_room_user(user_id, room_id):
     room_to_delete = Room.read_by_id(room_id)
     room_deleted = room_to_delete.delete_room()
