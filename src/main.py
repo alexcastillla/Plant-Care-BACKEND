@@ -200,7 +200,7 @@ def get_types():
 
 # Rutas de carga de datos para presentacion
 
-@app.route('/grows', methods=['POST'])
+@app.route('/growsdata', methods=['POST'])
 def add_grow():  
     body = request.get_json()
 
@@ -209,7 +209,7 @@ def add_grow():
 
     return ({'status': 'OK', 'message': 'Grow data saved succesfully'}), 200
 
-@app.route('/plantstype', methods=['POST'])
+@app.route('/typedata', methods=['POST'])
 def add_types():  
     body = request.get_json()
 
